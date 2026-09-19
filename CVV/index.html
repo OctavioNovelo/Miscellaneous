@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OCTAVIO NOVELO // REGISTRO DE PERSONAL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- SECUENCIA DE ARRANQUE                                          -->
+<!-- ============================================================ -->
+<div id="boot-screen">
+  <div id="boot-log"></div>
+  <button id="boot-skip" aria-label="Omitir secuencia de arranque">OMITIR ▸▸</button>
+</div>
+
+<!-- ============================================================ -->
+<!-- OVERLAY DE INTERFAZ (scanlines / viñeta / grid)                -->
+<!-- ============================================================ -->
+<div class="crt-overlay" aria-hidden="true"></div>
+<div class="hex-field" aria-hidden="true"></div>
+
+<div id="app" class="hidden">
+
+  <!-- BARRA SUPERIOR DE ESTADO -->
+  <header class="statusbar">
+    <div class="mark">
+      <svg viewBox="0 0 48 48" class="mark-svg" aria-hidden="true">
+        <polygon points="24,2 44,14 44,34 24,46 4,34 4,14" class="mark-hex"/>
+        <polygon points="24,10 37,17.5 37,32.5 24,40 11,32.5 11,17.5" class="mark-hex-inner"/>
+        <circle cx="24" cy="24" r="5" class="mark-eye"/>
+      </svg>
+      <div class="mark-text">
+        <span class="mark-title">MAGI // ARCHIVO DE PERSONAL</span>
+        <span class="mark-sub">TERMINAL DE ACCESO — NIVEL 1</span>
+      </div>
+    </div>
+    <div class="statusbar-right">
+      <div class="status-chip">ESTADO: <span class="ok">NOMINAL</span></div>
+      <div class="status-clock" id="clock">00:00:00</div>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <!-- NAV LATERAL -->
+    <nav class="sidenav" aria-label="Secciones del expediente">
+      <button class="nav-item active" data-target="panel-inicio"><span class="nav-id">01</span>INICIO</button>
+      <button class="nav-item" data-target="panel-perfil"><span class="nav-id">02</span>SINOPSIS</button>
+      <button class="nav-item" data-target="panel-trayectoria"><span class="nav-id">03</span>TRAYECTORIA</button>
+      <button class="nav-item" data-target="panel-formacion"><span class="nav-id">04</span>FORMACIÓN</button>
+      <button class="nav-item" data-target="panel-aptitudes"><span class="nav-id">05</span>APTITUDES</button>
+      <button class="nav-item" data-target="panel-lenguajes"><span class="nav-id">06</span>LENGUAJES</button>
+      <button class="nav-item" data-target="panel-logros"><span class="nav-id">07</span>LOGROS</button>
+      <button class="nav-item" data-target="panel-proyectos"><span class="nav-id">08</span>REPOSITORIO</button>
+      <button class="nav-item" data-target="panel-contacto"><span class="nav-id">09</span>ENLACE</button>
+
+      <div class="sync-readout">
+        <span class="sync-label">SYNC RATIO</span>
+        <div class="sync-bar"><div class="sync-bar-fill" id="syncFill"></div></div>
+        <span class="sync-value" id="syncValue">00.0%</span>
+      </div>
+    </nav>
+
+    <!-- CONTENIDO -->
+    <main class="stage">
+
+      <!-- 01 INICIO -->
+      <section class="panel active" id="panel-inicio" data-code="A-01">
+        <div class="panel-frame">
+          <div class="panel-head">
+            <span class="panel-tag">EXPEDIENTE // A-01</span>
+            <span class="panel-tag right">CLASIFICACIÓN: PERSONAL</span>
+          </div>
+
+          <div class="hero">
+            <div class="hero-id">
+              <div class="id-photo">
+                <img src="foto_1.png" alt="Octavio Novelo">
+              </div>
+              <div class="id-plate">
+                <span class="id-row">DESIGNACIÓN</span>
+                <span class="id-value">OCTAVIO AUGUSTO NOVELO MARTINEZ</span>
+                <span class="id-row">ROL</span>
+                <span class="id-value" id="typedRole"></span>
+              </div>
+            </div>
+
+            <div class="hero-text">
+              <h1>OCTAVIO<br>NOVELO</h1>
+              <p class="hero-lede">
+                Actual estudiante de Ingeniería en Desarrollo de Tecnologías y Software (DTS) en la
+                Universidad Modelo. Apasionado de la ciberseguridad y de la restauración de consolas
+                y juegos antiguos. Me gustan los retos, y mientras más difícil, más interesante es.
+              </p>
+              <div class="hero-actions">
+                <a href="https://github.com/OctavioNovelo" target="_blank" rel="noopener" class="btn-terminal">ACCEDER_A_GIT ▸</a>
+                <a href="#panel-contacto" class="btn-terminal ghost nav-link">ABRIR_CANAL_COMMS ▸</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="ticker" aria-hidden="true">
+            <div class="ticker-track">
+              <span>PROTOCOLO DE VISUALIZACIÓN ACTIVO — ARCHIVOS CARGADOS: TRAYECTORIA / FORMACIÓN / APTITUDES / LENGUAJES / LOGROS / REPOSITORIO — ACCESO CONCEDIDO — TODOS LOS SISTEMAS NOMINALES —&nbsp;</span>
+              <span>PROTOCOLO DE VISUALIZACIÓN ACTIVO — ARCHIVOS CARGADOS: TRAYECTORIA / FORMACIÓN / APTITUDES / LENGUAJES / LOGROS / REPOSITORIO — ACCESO CONCEDIDO — TODOS LOS SISTEMAS NOMINALES —&nbsp;</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 02 SINOPSIS -->
+      <section class="panel" id="panel-perfil" data-code="A-02">
+        <div class="panel-frame">
+          <div class="panel-head">
+            <span class="panel-tag">EXPEDIENTE // A-02</span>
+            <span class="panel-tag right">SINOPSIS DEL SUJETO</span>
+          </div>
+          <h2 class="panel-title">Sinopsis</h2>
+
+          <p class="body-text">
+            Como apasionado del área de la tecnología, con un principal interés en la ciberseguridad,
+            siempre busco aprender nuevas tecnologías y nuevas formas de innovar, no solo en mi vida
+            diaria sino también en mis proyectos personales, por más mínimo e insignificante que sea
+            el detalle. Actualmente estudio en la Universidad Modelo en Mérida, Yucatán, México la
+            Ingeniería en Desarrollo de Tecnologías y Software, cursando el tercer semestre, y hago mi
+            servicio social en el área de Tecnologías de la Información (TI) de la misma universidad.
+          </p>
+          <p class="body-text">
+            He participado en múltiples concursos y competencias, siendo de los principales:
+          </p>
+          <ul>
+            <li>OMI 2023</li>
+            <li>CanSat 2026</li>
+            <li>AHUA CTF 2026</li>
+            <li>ICPC 2023</li>
+          </ul>
+          <p class="body-text">…entre otros.</p>
+
+          <div class="quote-block">
+            <span class="quote-mark">»</span>
+            <!-- EDITA AQUÍ: una cita o principio de trabajo personal, corto. -->
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 03 TRAYECTORIA -->
+      <section class="panel" id="panel-trayectoria" data-code="A-03">
+        <div class="panel-frame">
+          <div class="panel-head">
+            <span class="panel-tag">EXPEDIENTE // A-03</span>
+            <span class="panel-tag right">REGISTRO CRONOLÓGICO</span>
+          </div>
+          <h2 class="panel-title">Trayectoria</h2>
+
+          <ol class="timeline">
+            <li class="timeline-item">
+              <div class="timeline-node"></div>
+              <div class="timeline-body">
+                <span class="timeline-date">2026 — ACTUALIDAD</span>
+                <h3>Comité Organizador / Secretario de Vinculación de Prepa Uno UADY</h3>
+                <p>Desarrollador y programador del auditor de seguridad
+                <a href="https://github.com/OctavioNovelo/Herramientas-Ejecutables-de-Reconocimineto-y-Auditoria" target="_blank" rel="noopener">HERA</a>.</p>
+              </div>
+            </li>
+            <li class="timeline-item">
+              <div class="timeline-node"></div>
+              <div class="timeline-body">
+                <span class="timeline-date">2023</span>
+                <h3>Preparación — Olimpiada Mexicana de Informática (OMI)</h3>
+                <p>Desarrollo y práctica de algoritmos en C++ como parte de la preparación
+                para la OMI 2023: estructuras de datos, fuerza bruta, programación dinámica
+                y optimización de soluciones bajo restricciones de tiempo.</p>
+              </div>
+            </li>
+            <li class="timeline-item">
+              <div class="timeline-node"></div>
+              <div class="timeline-body">
+                <span class="timeline-date"><!-- EDITA AQUÍ: ajusta el año si no es correcto --> 2022</span>
+                <h3>Varios / Desarrollador</h3>
+                <p>A lo largo de mi trayectoria he desarrollado diversas apps y software para personas.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- 04 FORMACIÓN -->
+      <section class="panel" id="panel-formacion" data-code="A-04">
+        <div class="panel-frame">
+          <div class="panel-head">
+            <span class="panel-tag">EXPEDIENTE // A-04</span>
+            <span class="panel-tag right">PREPARACIÓN ACADÉMICA</span>
+          </div>
+          <h2 class="panel-title">Formación</h2>
+
+          <div class="cards-grid">
+            <div class="data-card">
+              <span class="data-card-tag">EDU // 01</span>
+              <h3>Universidad Modelo</h3>
+              <!-- EDITA AQUÍ: nombre exacto de la carrera y fechas -->
+              <span class="data-card-meta">Ingeniería en Desarrollo de Tecnologías y Software — 2025–Actualidad</span>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Formación con énfasis
+              en fundamentos de programación, estructuras de datos y desarrollo de software.</p>
+            </div>
+            <div class="data-card">
+              <span class="data-card-tag">EDU // 02</span>
+              <!-- EDITA AQUÍ: institución real -->
+              <h3>[ Institución ]</h3>
+              <span class="data-card-meta">[ Nivel de estudios ] — [ Año ]–[ Año ]</span>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+              incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+            <div class="data-card">
+              <span class="data-card-tag">CERT // 01</span>
+              <!-- EDITA AQUÍ: certificación / curso real -->
+              <h3>[ Certificación / Curso ]</h3>
+              <span class="data-card-meta">[ Entidad emisora ] — [ Año ]</span>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+              incididunt ut labore.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 05 APTITUDES -->
+      <section class="panel" id="panel-aptitudes" data-code="A-05">
+        <div class="panel-frame">
+          <div class="panel-head">
+            <span class="panel-tag">EXPEDIENTE // A-05</span>
+            <span class="panel-tag right">EVALUACIÓN DE APTITUDES</span>
+          </div>
+          <h2 class="panel-title">Competencias</h2>
+
+          <div class="cards-grid three">
+            <!-- EDITA AQUÍ: cambia los 6 títulos y descripciones por tus competencias reales -->
+            <div class="apt-card">
+              <span class="apt-index">I</span>
+              <h3>[ Resolución de problemas ]</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+            <div class="apt-card">
+              <span class="apt-index">II</span>
+              <h3>[ Pensamiento algorítmico ]</h3>
+              <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+            <div class="apt-card">
+              <span class="apt-index">III</span>
+              <h3>[ Trabajo en equipo ]</h3>
+              <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+            </div>
+            <div class="apt-card">
+              <span class="apt-index">IV</span>
+              <h3>[ Comunicación técnica ]</h3>
+              <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.</p>
+            </div>
+            <div class="apt-card">
+              <span class="apt-index">V</span>
+              <h3>[ Adaptabilidad ]</h3>
+              <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui.</p>
+            </div>
+            <div class="apt-card">
+              <span class="apt-index">VI</span>
+              <h3>[ Autogestión / disciplina ]</h3>
+              <p>Officia deserunt mollit anim id est laborum, lorem ipsum dolor sit amet.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 06 LENGUAJES -->
+      <section class="panel" id="panel-lenguajes" data-code="A-06">
+        <div class="panel-frame">
+          <div class="panel-head">
+            <span class="panel-tag">EXPEDIENTE // A-06</span>
+            <span class="panel-tag right">COMPETENCIA TÉCNICA</span>
+          </div>
+          <h2 class="panel-title">Lenguajes &amp; Tecnologías</h2>
+          <p class="body-text small">Lenguajes de programación conocidos y utilizados (información basada en mi repositorio de GitHub).</p>
+
+          <div class="skill-list" id="skillList">
+            <div class="skill-row" data-level="85">
+              <span class="skill-name">C++</span>
+              <div class="skill-track"><div class="skill-fill"></div></div>
+              <span class="skill-pct">00%</span>
+            </div>
+            <div class="skill-row" data-level="80">
+              <span class="skill-name">Python</span>
+              <div class="skill-track"><div class="skill-fill"></div></div>
+              <span class="skill-pct">00%</span>
+            </div>
+            <div class="skill-row" data-level="65">
+              <span class="skill-name">HTML / CSS</span>
+              <div class="skill-track"><div class="skill-fill"></div></div>
+              <span class="skill-pct">00%</span>
+            </div>
+            <div class="skill-row" data-level="55">
+              <span class="skill-name">JavaScript</span>
+              <div class="skill-track"><div class="skill-fill"></div></div>
+              <span class="skill-pct">00%</span>
+            </div>
+            <!-- EDITA AQUÍ: ajusta el porcentaje de C# si no refleja tu nivel real -->
+            <div class="skill-row" data-level="40">
+              <span class="skill-name">C#</span>
+              <div class="skill-track"><div class="skill-fill"></div></div>
+              <span class="skill-pct">00%</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 07 LOGROS -->
+      <section class="panel" id="panel-logros" data-code="A-07">
+        <div class="panel-frame">
+          <div class="panel-head">
+            <span class="panel-tag">EXPEDIENTE // A-07</span>
+            <span class="panel-tag right">HITOS REGISTRADOS</span>
+          </div>
+          <h2 class="panel-title">Logros</h2>
+
+          <div class="alert-list">
+            <div class="alert-box">
+              <span class="alert-code">HITO 001</span>
+              <h3>Preparación para la Olimpiada Mexicana de Informática (OMI) 2023</h3>
+              <p>Resolución sistemática de problemas algorítmicos en C++ como parte del
+              entrenamiento para la OMI, documentada en el repositorio público <em>Cpp</em>.</p>
+            </div>
+            <div class="alert-box">
+              <span class="alert-code">HITO 002</span>
+              <h3>Participación en concursos de programación</h3>
+              <p>Desarrollo de soluciones para problemas de concurso, registradas en el
+              repositorio público <em>Contests</em>.</p>
+            </div>
+            <div class="alert-box">
+              <!-- EDITA AQUÍ: logro real (beca, concurso, publicación, etc.) -->
+              <span class="alert-code">HITO 003</span>
+              <h3>[ Logro / reconocimiento ]</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+              tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+            <div class="alert-box">
+              <!-- EDITA AQUÍ: logro real -->
+              <span class="alert-code">HITO 004</span>
+              <h3>[ Logro / reconocimiento ]</h3>
+              <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+              aliquip ex ea commodo consequat.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 08 REPOSITORIO / PROYECTOS -->
+      <section class="panel" id="panel-proyectos" data-code="A-08">
+        <div class="panel-frame">
+          <div class="panel-head">
+            <span class="panel-tag">EXPEDIENTE // A-08</span>
+            <span class="panel-tag right">ENLACE A REPOSITORIO GIT</span>
+          </div>
+          <h2 class="panel-title">Repositorio</h2>
+          <p class="body-text small">Extraído de <a href="https://github.com/OctavioNovelo" target="_blank" rel="noopener">github.com/OctavioNovelo</a>. Verifica y actualiza las descripciones si tus repositorios han cambiado.</p>
+
+          <div class="repo-grid" id="repoGrid">
+            <a class="repo-card" href="https://github.com/OctavioNovelo/Cpp" target="_blank" rel="noopener">
+              <span class="repo-lang" data-lang="C++">C++</span>
+              <h3>Cpp</h3>
+              <p>Códigos de 2023 desarrollados como preparación para la OMI (Olimpiada
+              Mexicana de Informática).</p>
+              <span class="repo-link">ABRIR_REPOSITORIO ▸</span>
+            </a>
+            <a class="repo-card" href="https://github.com/OctavioNovelo/Python-Codes" target="_blank" rel="noopener">
+              <span class="repo-lang" data-lang="Python">PY</span>
+              <h3>Python-Codes</h3>
+              <p>Códigos en Python de 2022 que explican el funcionamiento de distintas
+              funciones del lenguaje.</p>
+              <span class="repo-link">ABRIR_REPOSITORIO ▸</span>
+            </a>
+            <a class="repo-card" href="https://github.com/OctavioNovelo/HTML-CSS-JAVA" target="_blank" rel="noopener">
+              <span class="repo-lang" data-lang="Web">WEB</span>
+              <h3>HTML-CSS-JAVA</h3>
+              <p>Trabajos de HTML, CSS y JavaScript — el punto de partida de este mismo
+              tipo de proyecto de presentación web.</p>
+              <span class="repo-link">ABRIR_REPOSITORIO ▸</span>
+            </a>
+            <a class="repo-card" href="https://github.com/OctavioNovelo/Universidad-Modelo" target="_blank" rel="noopener">
+              <span class="repo-lang" data-lang="C++">C++</span>
+              <h3>Universidad-Modelo</h3>
+              <p>Trabajos realizados durante los estudios en la Universidad Modelo.</p>
+              <span class="repo-link">ABRIR_REPOSITORIO ▸</span>
+            </a>
+            <a class="repo-card" href="https://github.com/OctavioNovelo/Contests" target="_blank" rel="noopener">
+              <span class="repo-lang" data-lang="C++">C++</span>
+              <h3>Contests</h3>
+              <p>Códigos desarrollados para concursos de programación competitiva.</p>
+              <span class="repo-link">ABRIR_REPOSITORIO ▸</span>
+            </a>
+            <a class="repo-card" href="https://github.com/OctavioNovelo/Algorithms" target="_blank" rel="noopener">
+              <span class="repo-lang" data-lang="C++">C++</span>
+              <h3>Algorithms</h3>
+              <p>Implementaciones de algoritmos clásicos en C++.</p>
+              <span class="repo-link">ABRIR_REPOSITORIO ▸</span>
+            </a>
+            <a class="repo-card" href="https://github.com/OctavioNovelo/Herramientas-Ejecutables-de-Reconocimineto-y-Auditoria" target="_blank" rel="noopener">
+              <span class="repo-lang" data-lang="Otro">SYS</span>
+              <h3>HERA</h3>
+              <!-- EDITA AQUÍ: descripción real del proyecto HERA (Herramientas Ejecutables de Reconocimiento y Auditoría) -->
+              <p>Herramientas Ejecutables de Reconocimiento y Auditoría: lorem ipsum dolor
+              sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
+              <span class="repo-link">ABRIR_REPOSITORIO ▸</span>
+            </a>
+            <a class="repo-card" href="https://github.com/OctavioNovelo/Programacion-y-Control-CanSat-2026" target="_blank" rel="noopener">
+              <span class="repo-lang" data-lang="Otro">SYS</span>
+              <h3>CanSat 2026</h3>
+              <!-- EDITA AQUÍ: ajusta la descripción si difiere de esto -->
+              <p>Programación y control del sistema embebido para el proyecto CanSat 2026:
+              adquisición de sensores, lógica de vuelo y transmisión de telemetría.</p>
+              <span class="repo-link">ABRIR_REPOSITORIO ▸</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 09 CONTACTO -->
+      <section class="panel" id="panel-contacto" data-code="A-09">
+        <div class="panel-frame">
+          <div class="panel-head">
+            <span class="panel-tag">EXPEDIENTE // A-09</span>
+            <span class="panel-tag right">CANAL DE COMUNICACIÓN</span>
+          </div>
+          <h2 class="panel-title">Enlace</h2>
+          <p class="body-text small">Canal directo para establecer contacto.</p>
+
+          <div class="contact-grid">
+            <!-- EDITA AQUÍ: reemplaza los valores entre [ ] por tus datos reales -->
+            <a class="contact-line" href="mailto:octavionovelo22@gmail.com">
+              <span class="contact-key">CORREO</span>
+              <span class="contact-value">octavionovelo22@gmail.com / octavionovelo22@proton.me</span>
+            </a>
+            <a class="contact-line" href="https://github.com/OctavioNovelo" target="_blank" rel="noopener">
+              <span class="contact-key">GIT</span>
+              <span class="contact-value">github.com/OctavioNovelo</span>
+            </a>
+            <a class="contact-line" href="https://www.instagram.com/octavio_novelo?igsi=MWRoNGtwYjVzN3ptdw%3D%3D&utm_source=qr" target="_blank" rel="noopener">
+              <span class="contact-key">INSTAGRAM</span>
+              <span class="contact-value">octavio_novelo</span>
+            </a>
+            <a class="contact-line" href="tel:+529991290518">
+              <span class="contact-key">TEL</span>
+              <span class="contact-value">9991290518</span>
+            </a>
+            <div class="contact-line static">
+              <span class="contact-key">UBICACIÓN</span>
+              <span class="contact-value">Mérida, Yucatán</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer class="statusbar bottom">
+    <span>MAGI-01 · MAGI-02 · MAGI-03 — CONSENSO ALCANZADO</span>
+    <span id="footerCode">REF: OCTNOV-CVV</span>
+  </footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
