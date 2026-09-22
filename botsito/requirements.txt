@@ -1,0 +1,4 @@
+playwright>=1.44.0
+aioconsole==0.7.1
+pyarmor>=9.0.0
+aiohttp==3.9.5
