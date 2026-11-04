@@ -1,0 +1,1657 @@
+{
+  "mensajes": {
+    "noEntendi": "Soy Ito 🩷🩵 y no pude entender tu pregunta. Intenta escribirla de forma más directa, por ejemplo: «¿Dónde está Control Escolar?», «¿Cómo saco una constancia?» o «¿Qué son las tutorías?».",
+    "soloTexto": "Por ahora solo puedo leer mensajes de texto 🙏🏻. Escríbeme tu duda acerca de la Facultad de Derecho y con gusto te ayudo."
+  },
+  "sinonimos": {
+    "quienes": "quien", "cuales": "cual", "acargo": "cargo", "alfrente": "frente",
+    "q": "que", "k": "que", "ke": "que", "xq": "porque", "pq": "porque", "dnd": "donde",
+    "maestra": "maestro", "profe": "profesor", "profesora": "profesor",
+    "cel": "telefono", "tel": "telefono", "celular": "telefono",
+    "biblio": "biblioteca", "compu": "computo", "wc": "bano", "sanitario": "bano"
+  },
+  "temas": [
+    {
+      "id": "saludos.buenas_noches",
+      "categoria": "Saludos",
+      "prioridad": -1,
+      "keywords": [
+        ["buenas", "noches"]
+      ],
+      "respuesta": "¡Hola hola, buenas noches! soy Ito, amigo de Alex Canché 🩷🩵. Estoy aquí para responder las dudas que tengas acerca de la Facultad de Derecho. ¿Cómo puedo ayudarte hoy? 🤟🏻"
+    },
+    {
+      "id": "saludos.buenas_tardes",
+      "categoria": "Saludos",
+      "prioridad": -1,
+      "keywords": [
+        ["buenas", "tardes"]
+      ],
+      "respuesta": "¡Hola hola, buenas tardes! soy Ito, amigo de Alex Canché 🩷🩵. Estoy aquí para responder las dudas que tengas acerca de la Facultad de Derecho. ¿Cómo puedo ayudarte hoy? 🤟🏻"
+    },
+    {
+      "id": "saludos.buenos_dias",
+      "categoria": "Saludos",
+      "prioridad": -1,
+      "keywords": [
+        ["buenos", "dias"]
+      ],
+      "respuesta": "¡Hola hola, buenos dias! soy Ito, amigo de Alex Canché 🩷🩵. Estoy aquí para responder las dudas que tengas acerca de la Facultad de Derecho. ¿Cómo puedo ayudarte hoy? 🤟🏻"
+    },
+    {
+      "id": "saludos.hola",
+      "categoria": "Saludos",
+      "prioridad": -1,
+      "keywords": [
+        ["hola"],
+        ["buenas"],
+        ["holaa"]
+      ],
+      "respuesta": "Hola hola! soy Ito, amigo de Alex Canché 🩷🩵. Estoy aquí para responder las dudas que tengas acerca de la Facultad de Derecho. ¿Cómo puedo ayudarte hoy? 🤟🏻"
+    },
+    {
+      "id": "acoso.acoso",
+      "categoria": "Acoso y violencia",
+      "prioridad": 10,
+      "prefijo": true,
+      "keywords": [
+        ["acos"],
+        ["hostig"]
+      ],
+      "respuesta": "Si te sientes o fuiste acosad@, puedes utilizar el Protocolo de Violencia de Genero que la UADY maneja para hacer tu denuncia y darle seguimiento al caso. https://uady.mx/protocolo-violencia-de-genero"
+    },
+    {
+      "id": "acoso.agresion",
+      "categoria": "Acoso y violencia",
+      "prioridad": 10,
+      "prefijo": true,
+      "keywords": [
+        ["agresi"],
+        ["agresor"],
+        ["agred"],
+        ["viol"],
+        ["abus"],
+        ["protocolo", "sexual"],
+        ["protocolo", "genero"]
+      ],
+      "respuesta": "Si te sientes o fuiste agredid@, puedes utilizar el Protocolo de Violencia de Genero que la UADY maneja para hacer tu denuncia y darle seguimiento al caso. https://uady.mx/protocolo-violencia-de-genero"
+    },
+    {
+      "id": "sociedad.sociedad_alumnos",
+      "categoria": "Sociedad de alumnos",
+      "keywords": [
+        ["sociedad", "alumnos"],
+        ["que", "sociedad", "alumnos"],
+        ["para", "que", "sirve", "sociedad", "alumnos"],
+        ["que", "hace", "sociedad", "alumnos"],
+        ["que", "hacen", "sociedad", "alumnos"],
+        ["quienes", "sociedad", "alumnos"],
+        ["quienes", "forman", "sociedad", "alumnos"]
+      ],
+      "respuesta": "Sociedad de alumnos es una agrupación estudiantil encargada de realizar actividades para la Facultad y está integrada por alumnas y alumnos interesados en colaborar."
+    },
+    {
+      "id": "ubicacion.ruta_facultad",
+      "categoria": "Ubicación de la Facultad",
+      "keywords": [
+        ["como", "llegar", "derecho"],
+        ["como", "llegar", "facultad"],
+        ["ruta", "facultad"],
+        ["direccion", "facultad"],
+        ["direccion", "derecho"],
+        ["ubica", "facultad"],
+        ["ubica", "derecho"],
+        ["como", "llego", "derecho"],
+        ["como", "llego", "facultad"],
+        ["como", "llego", "facultad", "derecho"],
+        ["como", "ir", "derecho"],
+        ["como", "ir", "facultad", "derecho"],
+        ["como", "ir", "facultad"]
+      ],
+      "respuesta": "Usa la ubicación de Google Maps para encontrar tu mejor ruta. https://www.google.com/maps/place/Facultad+de+Derecho,+Gran+San+Pedro+Cholul,+97305+Yuc./@21.0211342,-89.5583981,17z/data=!3m1!4b1!4m6!3m5!1s0x8f56775d85302a9d:0x47660475084b7594!8m2!3d21.0211342!4d-89.5558232!16s%2Fg%2F11qg0r8_s1?entry=ttu&g_ep=EgoyMDI2MDgyMy4wIKXMDSoASAFQAw%3D%3D"
+    },
+    {
+      "id": "ubicacion.donde_derecho",
+      "categoria": "Ubicación de la Facultad",
+      "keywords": [
+        ["donde", "derecho"],
+        ["donde", "facultad"],
+        ["ubicacion", "derecho"],
+        ["ubicacion", "facultad"],
+        ["ubi", "derecho"],
+        ["ubi", "facultad"],
+        ["donde", "esta", "derecho"],
+        ["donde", "esta", "facultad"],
+        ["donde", "esta", "facultad", "derecho"],
+        ["donde", "queda", "derecho"],
+        ["donde", "queda", "facultad"],
+        ["donde", "queda", "facultad", "derecho"],
+        ["ubicacion", "facultad", "derecho"],
+        ["donde", "esta", "universidad", "derecho"],
+        ["donde", "esta", "escuela", "derecho"]
+      ],
+      "respuesta": "La Facultad de Derecho de la UADY se encuentra en Mérida, Yucatán. https://www.google.com/maps/place/Facultad+de+Derecho,+Gran+San+Pedro+Cholul,+97305+Yuc./@21.0211342,-89.5583981,17z/data=!3m1!4b1!4m6!3m5!1s0x8f56775d85302a9d:0x47660475084b7594!8m2!3d21.0211342!4d-89.5558232!16s%2Fg%2F11qg0r8_s1?entry=ttu&g_ep=EgoyMDI2MDgyMy4wIKXMDSoASAFQAw%3D%3D"
+    },
+    {
+      "id": "telefonos.telefono_facultad",
+      "categoria": "Teléfonos y correos",
+      "keywords": [
+        ["telefono", "facultad"],
+        ["numero", "facultad"],
+        ["num", "facultad"],
+        ["telefono", "derecho"],
+        ["numero", "derecho"],
+        ["num", "derecho"],
+        ["telefono", "academica"],
+        ["numero", "academica"],
+        ["num", "academica"],
+        ["cuales", "telefono", "facultad"],
+        ["telefono", "facultad", "derecho"],
+        ["numero", "telefono", "facultad"],
+        ["como", "contacto", "facultad"]
+      ],
+      "respuesta": "La Secretaría Académica maneja el teléfono 99 9448 6532, extensión 72105."
+    },
+    {
+      "id": "telefonos.correo_academica",
+      "categoria": "Teléfonos y correos",
+      "keywords": [
+        ["correo", "academica"],
+        ["cuales", "correo", "secretaria", "academica"],
+        ["correo", "secretaria", "academica"],
+        ["email", "secretaria", "academica"],
+        ["como", "contacto", "secretaria", "academica"]
+      ],
+      "respuesta": "El correo de Secretaría Académica es academica.derecho@correo.uady.mx."
+    },
+    {
+      "id": "telefonos.email_academica",
+      "categoria": "Teléfonos y correos",
+      "keywords": [
+        ["email", "academica"]
+      ],
+      "respuesta": "El email de Secretaría Académica es academica.derecho@correo.uady.mx."
+    },
+    {
+      "id": "telefonos.email_control_escolar",
+      "categoria": "Teléfonos y correos",
+      "keywords": [
+        ["email", "control", "escolar"]
+      ],
+      "respuesta": "El email de Control Escolar es cescolar.derecho@alumnos.uady.mx."
+    },
+    {
+      "id": "telefonos.correo_control_escolar",
+      "categoria": "Teléfonos y correos",
+      "keywords": [
+        ["correo", "control", "escolar"],
+        ["cuales", "correo", "control", "escolar"],
+        ["como", "contacto", "control", "escolar"]
+      ],
+      "respuesta": "El correo de Control Escolar es cescolar.derecho@alumnos.uady.mx."
+    },
+    {
+      "id": "telefonos.telefono_control_escolar",
+      "categoria": "Teléfonos y correos",
+      "keywords": [
+        ["telefono", "control", "escolar"],
+        ["numero", "control", "escolar"],
+        ["num", "control", "escolar"],
+        ["cuales", "telefono", "control", "escolar"],
+        ["como", "llamo", "control", "escolar"]
+      ],
+      "respuesta": "El teléfono de Control Escolar es 99 9982 5876, extensión 72114."
+    },
+    {
+      "id": "telefonos.correo_administrativa",
+      "categoria": "Teléfonos y correos",
+      "keywords": [
+        ["correo", "administrativa"],
+        ["cuales", "correo", "secretaria", "administrativa"],
+        ["correo", "secretaria", "administrativa"],
+        ["email", "secretaria", "administrativa"],
+        ["como", "contacto", "secretaria", "administrativa"]
+      ],
+      "respuesta": "El correo de Secretaría Administrativa es administrativa.derecho@correo.uady.mx."
+    },
+    {
+      "id": "telefonos.email_administrativa",
+      "categoria": "Teléfonos y correos",
+      "keywords": [
+        ["email", "administrativa"]
+      ],
+      "respuesta": "El email de Secretaría Administrativa es administrativa.derecho@correo.uady.mx."
+    },
+    {
+      "id": "telefonos.telefono_administrativa",
+      "categoria": "Teléfonos y correos",
+      "keywords": [
+        ["telefono", "administrativa"],
+        ["numero", "administrativa"],
+        ["num", "administrativa"]
+      ],
+      "respuesta": "La Secretaria Administrativa actualmente no cuenta con un número de contacto"
+    },
+    {
+      "id": "horarios.horario_control_escolar",
+      "categoria": "Horarios",
+      "keywords": [
+        ["horario", "control", "escolar"],
+        ["hora", "control", "escolar"],
+        ["cuales", "horario", "control", "escolar"],
+        ["que", "hora", "abre", "control", "escolar"],
+        ["que", "hora", "control", "escolar"],
+        ["cuando", "abre", "control", "escolar"],
+        ["cuando", "atiende", "control", "escolar"],
+        ["que", "dias", "abre", "control", "escolar"]
+      ],
+      "respuesta": "Usualmente de lunes a viernes de 9:00 a 16:30 horas."
+    },
+    {
+      "id": "horarios.horario_administrativa",
+      "categoria": "Horarios",
+      "keywords": [
+        ["horario", "administrativa"],
+        ["hora", "administrativa"],
+        ["cuales", "horario", "secretaria", "administrativa"],
+        ["horario", "secretaria", "administrativa"],
+        ["que", "hora", "abre", "secretaria", "administrativa"],
+        ["que", "hora", "secretaria", "administrativa"],
+        ["cuando", "atiende", "secretaria", "administrativa"]
+      ],
+      "respuesta": "Lunes a viernes, de 8:00 a 16:00 horas."
+    },
+    {
+      "id": "ubicacion.donde_control_escolar",
+      "categoria": "Ubicación de áreas",
+      "keywords": [
+        ["donde", "control", "escolar"],
+        ["ubicacion", "control", "escolar"],
+        ["ubi", "control", "escolar"]
+      ],
+      "respuesta": "Control Escolar se encuentra en la lateral de la explanada; los trámites presenciales publicados se realizan ahi."
+    },
+    {
+      "id": "ubicacion.donde_administrativa",
+      "categoria": "Ubicación de áreas",
+      "keywords": [
+        ["donde", "administrativa"],
+        ["ubicacion", "administrativa"],
+        ["ubi", "administrativa"],
+        ["donde", "administracion"],
+        ["ubicacion", "administracion"],
+        ["ubi", "administracion"],
+        ["donde", "esta", "secretaria", "administrativa"],
+        ["donde", "se", "encuentra", "secretaria", "administrativa"],
+        ["donde", "encuentro", "secretaria", "administrativa"],
+        ["ubicacion", "secretaria", "administrativa"],
+        ["donde", "queda", "secretaria", "administrativa"],
+        ["donde", "esta", "administracion"],
+        ["donde", "queda", "administracion"]
+      ],
+      "respuesta": "La Secretaría Administrativa se encuentra en las instalaciones de la Facultad de Derecho, en la planta baja, a un lado de Control Escolar."
+    },
+    {
+      "id": "ubicacion.donde_academica",
+      "categoria": "Ubicación de áreas",
+      "keywords": [
+        ["donde", "academica"],
+        ["ubicacion", "academica"],
+        ["ubi", "academica"],
+        ["donde", "esta", "secretaria", "academica"],
+        ["donde", "se", "encuentra", "secretaria", "academica"],
+        ["donde", "encuentro", "secretaria", "academica"],
+        ["ubicacion", "secretaria", "academica"],
+        ["donde", "queda", "secretaria", "academica"],
+        ["donde", "esta", "academica"]
+      ],
+      "respuesta": "La Secretaría Académica se encuentra en las instalaciones de la Facultad de Derecho, en el segundo piso, a un lado de la Dirección."
+    },
+    {
+      "id": "ubicacion.donde_esta_control_escolar",
+      "categoria": "Ubicación de áreas",
+      "keywords": [
+        ["donde", "esta", "control", "escolar"],
+        ["donde", "se", "encuentra", "control", "escolar"],
+        ["donde", "encuentro", "control", "escolar"],
+        ["donde", "queda", "control", "escolar"],
+        ["donde", "esta", "control", "estudiantes"],
+        ["donde", "hago", "tramites", "escolares"]
+      ],
+      "respuesta": "Se encuentra en el Departamento de Control Escolar de la Facultad; los trámites presenciales publicados se realizan ahí y se encuentra en la lateral de la explanada."
+    },
+    {
+      "id": "ubicacion.donde_hago_tramites",
+      "categoria": "Ubicación de áreas",
+      "keywords": [
+        ["donde", "hago", "tramites"]
+      ],
+      "respuesta": "Control Escolar atiende los trámites escolares correspondientes en la Facultad."
+    },
+    {
+      "id": "biblioteca.donde_biblioteca",
+      "categoria": "Biblioteca",
+      "keywords": [
+        ["donde", "biblioteca"],
+        ["ubicacion", "biblioteca"],
+        ["ubi", "biblioteca"],
+        ["donde", "esta", "biblioteca"],
+        ["donde", "encuentro", "biblioteca"],
+        ["donde", "se", "encuentra", "biblioteca"],
+        ["donde", "queda", "biblioteca"],
+        ["donde", "puedo", "encontrar", "biblioteca"]
+      ],
+      "respuesta": "La biblioteca se encuentra a un lado del pasillo que lleva a la Facultad de Educación, saliendo de la Facultad de Derecho. Tiene atención de 8:30 a 21:00 horas."
+    },
+    {
+      "id": "biblioteca.horario_biblioteca",
+      "categoria": "Biblioteca",
+      "keywords": [
+        ["horario", "biblioteca"],
+        ["hora", "biblioteca"],
+        ["que", "hora", "abre", "biblioteca"],
+        ["que", "hora", "cierra", "biblioteca"]
+      ],
+      "respuesta": "La biblioteca tiene atención de 8:30 a 21:00 horas."
+    },
+    {
+      "id": "salones.salones",
+      "categoria": "Salones y baños",
+      "keywords": [
+        ["salones"],
+        ["donde", "estan", "salones"],
+        ["donde", "quedan", "salones"],
+        ["donde", "encuentro", "salones"]
+      ],
+      "respuesta": "El edificio completo de la Facultad tiene salones que se van ubicando por nombres con número y letra o, en su caso, son nombrados con carteles como el “Salón de Banderas”."
+    },
+    {
+      "id": "salones.donde_salon",
+      "categoria": "Salones y baños",
+      "keywords": [
+        ["donde", "salon"],
+        ["donde", "esta", "salon"]
+      ],
+      "respuesta": "No puedo apoyarte con la ubicación exacta de un salón específico. Sin embargo, los salones están marcados por número, letra o nombre."
+    },
+    {
+      "id": "salones.bano",
+      "categoria": "Salones y baños",
+      "keywords": [
+        ["bano"],
+        ["donde", "bano"],
+        ["ubicacion", "bano"],
+        ["ubi", "bano"],
+        ["donde", "estan", "banos"],
+        ["donde", "quedan", "banos"],
+        ["donde", "encuentro", "banos"]
+      ],
+      "respuesta": "En cada piso están los baños en la lateral de cada escalera."
+    },
+    {
+      "id": "salones.donde_estudiar",
+      "categoria": "Salones y baños",
+      "keywords": [
+        ["donde", "estudiar"],
+        ["donde", "estudio"],
+        ["lugares", "estudiar"],
+        ["donde", "puedo", "estudiar"],
+        ["donde", "puedo", "irme", "estudiar"],
+        ["donde", "puedo", "estudiar", "en", "facultad"],
+        ["centro", "estudio"],
+        ["centro", "para", "estudiar"],
+        ["lugar", "para", "estudiar"]
+      ],
+      "respuesta": "La Facultad cuenta con espacios destinados a la actividad académica, como la cafetería, el espacio de estudios con una biblioteca comunitaria y el área verde que cuenta con sillas para el alumnado."
+    },
+    {
+      "id": "salones.computo",
+      "categoria": "Salones y baños",
+      "keywords": [
+        ["computo"]
+      ],
+      "respuesta": "Se encuentra en el segundo piso, si te diriges a dirección, doblas al pasillo que está a la derecha, ahí encontrarás una puerta con “sala de cómputo"
+    },
+    {
+      "id": "salones.computacion",
+      "categoria": "Salones y baños",
+      "keywords": [
+        ["computacion"]
+      ],
+      "respuesta": "Se encuentra en el segundo piso, si te diriges a dirección, doblas al pasillo que está a la derecha, ahí encontrarás una puerta con “sala de cómputo”"
+    },
+    {
+      "id": "salones.como_identifico_salon",
+      "categoria": "Salones y baños",
+      "keywords": [
+        ["como", "estan", "identificados", "salones"],
+        ["como", "identifico", "salon"],
+        ["como", "encuentro", "salon"]
+      ],
+      "respuesta": "Los salones están identificados mediante números, letras o nombres colocados en carteles."
+    },
+    {
+      "id": "salones.hay_banos_en_facultad",
+      "categoria": "Salones y baños",
+      "keywords": [
+        ["hay", "banos", "en", "facultad"]
+      ],
+      "respuesta": "Sí. En cada piso están los baños en la lateral de cada escalera."
+    },
+    {
+      "id": "estudiar.hay_donde_estudiar",
+      "categoria": "Estudiar",
+      "keywords": [
+        ["hay", "lugares", "para", "estudiar"],
+        ["hay", "donde", "estudiar"]
+      ],
+      "respuesta": "Sí. La Facultad cuenta con espacios destinados a la actividad académica, como la cafetería, el espacio de estudios con una biblioteca comunitaria y el área verde que cuenta con sillas para el alumnado."
+    },
+    {
+      "id": "impresiones.impresiones",
+      "categoria": "Impresiones y copias",
+      "keywords": [
+        ["impresiones"],
+        ["imprimir"],
+        ["copias"],
+        ["donde", "puedo", "imprimir"],
+        ["donde", "imprimir"],
+        ["donde", "puedo", "sacar", "impresiones"],
+        ["donde", "imprimir", "documentos"],
+        ["donde", "puedo", "hacer", "impresiones"],
+        ["donde", "copias"],
+        ["donde", "sacar", "copias"],
+        ["donde", "hago", "copias"],
+        ["donde", "puedo", "sacar", "copias"]
+      ],
+      "respuesta": "La Facultad cuenta con una papelería que se encuentra en prefectura, pero en caso de no estar abierta el salón de cómputo también ofrece este servicio."
+    },
+    {
+      "id": "impresiones.hay_donde_imprimir",
+      "categoria": "Impresiones y copias",
+      "keywords": [
+        ["hay", "donde", "imprimir"],
+        ["hay", "donde", "hacer", "copias"]
+      ],
+      "respuesta": "Sí. La Facultad cuenta con una papelería en prefectura y, en caso de no estar abierta, el salón de cómputo también ofrece este servicio."
+    },
+    {
+      "id": "auditorio.auditorio",
+      "categoria": "Auditorio",
+      "keywords": [
+        ["auditorio"],
+        ["donde", "esta", "auditorio"],
+        ["donde", "auditorio"],
+        ["donde", "queda", "auditorio"],
+        ["donde", "encuentro", "auditorio"],
+        ["ubicacion", "auditorio"],
+        ["como", "encuentro", "auditorio"]
+      ],
+      "respuesta": "El auditorio se encuentra cerca del área verde y tiene un letrero en la puerta."
+    },
+    {
+      "id": "autoridades.cuales_autoridades",
+      "categoria": "Autoridades",
+      "keywords": [
+        ["cuales", "autoridades"]
+      ],
+      "respuesta": "La autoridad de la Facultad de Derecho UADY está conformada por la directora Dra. María Minerva Zapata Denis; el Secretario Academico el Dr. Stephen Javier Urbina Rodríguez y la Secretaria Academica la Mtra. Liliana Rivero Vallado"
+    },
+    {
+      "id": "autoridades.directora",
+      "categoria": "Autoridades",
+      "keywords": [
+        ["encargado", "facultad"],
+        ["encargada", "facultad"],
+        ["encargado", "derecho"],
+        ["encargada", "derecho"],
+        ["directora"],
+        ["director"]
+      ],
+      "respuesta": "La directora de la Facultad de Derecho UADY es la Dra. María Minerva Zapata Denis."
+    },
+    {
+      "id": "autoridades.academicos",
+      "categoria": "Autoridades",
+      "keywords": [
+        ["secretario", "academico"],
+        ["secretaria", "academica"],
+        ["secretario", "academica"],
+        ["secretaria", "academico"],
+        ["academicos"]
+      ],
+      "respuesta": "El Secretario Academico de la Facultad de Derecho UADY es el Dr. Stephen Javier Urbina Rodríguez."
+    },
+    {
+      "id": "autoridades.quien_administrativa",
+      "categoria": "Autoridades",
+      "keywords": [
+        ["quien", "administrativa"],
+        ["quien", "administrativo"],
+        ["encargada", "administrativa"]
+      ],
+      "respuesta": "La Secretaria Administrativa de la Facultad de Derecho UADY es la Mtra. Liliana Rivero Vallado."
+    },
+    {
+      "id": "autoridades.coordinador_posgrado",
+      "categoria": "Autoridades",
+      "keywords": [
+        ["coordinador", "posgrado"]
+      ],
+      "respuesta": "El coordinador de posgrados es el Mtro. Mario A. Cardeña Lara."
+    },
+    {
+      "id": "autoridades.coordinador_investigacion",
+      "categoria": "Autoridades",
+      "keywords": [
+        ["coordinador", "investigacion"]
+      ],
+      "respuesta": "El coordinador de investigacion es el Mtro. Mario A. Cardeña Lara."
+    },
+    {
+      "id": "autoridades.posgrado",
+      "categoria": "Autoridades",
+      "keywords": [
+        ["posgrado"]
+      ],
+      "respuesta": "El Mtro. Mario A. Cardeña Lara es quien coordina el area de posgrados."
+    },
+    {
+      "id": "autoridades.investigacion",
+      "categoria": "Autoridades",
+      "keywords": [
+        ["investigacion"]
+      ],
+      "respuesta": "El Mtro. Mario A. Cardeña Lara es quien coordina el area de investigacion."
+    },
+    {
+      "id": "autoridades.coordinador_tutorias",
+      "categoria": "Autoridades",
+      "keywords": [
+        ["coordinador", "tutorias"],
+        ["coordinadora", "tutorias"]
+      ],
+      "respuesta": "La Dra. Xóchitl Aline Mézquita Leana es la actual coordinadora de Tutorías de la Facultad de Derecho."
+    },
+    {
+      "id": "autoridades.bufete",
+      "categoria": "Autoridades",
+      "keywords": [
+        ["bufete"]
+      ],
+      "respuesta": "La Dra. Pilar Ventura Martínez es la coordinadora del Bufete Gratuito junto con el Dr. Jorge Armando Parra Dáger como coordinador adjunto."
+    },
+    {
+      "id": "autoridades.quienes_directora",
+      "categoria": "Autoridades",
+      "keywords": [
+        ["quienes", "directora"],
+        ["directora", "facultad", "derecho"],
+        ["directora", "derecho"],
+        ["quienes", "directora", "derecho"],
+        ["quien", "esta", "alfrente", "facultad"],
+        ["quien", "esta", "cargo", "facultad"],
+        ["quien", "dirige", "facultad"]
+      ],
+      "respuesta": "La directora de la Facultad es la Dra. María Minerva Zapata Denis."
+    },
+    {
+      "id": "autoridades.quienes_secretario_academico",
+      "categoria": "Autoridades",
+      "keywords": [
+        ["quienes", "secretario", "academico"],
+        ["secretario", "academico", "derecho"],
+        ["secretario", "academico", "facultad"],
+        ["secretario", "academico", "facultad", "derecho"],
+        ["quien", "esta", "secretario", "academico"],
+        ["quien", "esta", "acargo", "secretaria", "academica"]
+      ],
+      "respuesta": "El Dr. Stephen Javier Urbina Rodríguez."
+    },
+    {
+      "id": "autoridades.secretaria_administrativa",
+      "categoria": "Autoridades",
+      "keywords": [
+        ["secretaria", "administrativa"],
+        ["quienes", "secretaria", "administrativa"],
+        ["quien", "esta", "secretaria", "administrativa"],
+        ["quien", "esta", "acargo", "secretaria", "administrativa"],
+        ["secretaria", "administrativa", "derecho"],
+        ["secretaria", "administrativa", "facultad"]
+      ],
+      "respuesta": "La Mtra. Liliana Rivero Vallado."
+    },
+    {
+      "id": "autoridades.quien_coordina_posgrado",
+      "categoria": "Autoridades",
+      "keywords": [
+        ["quien", "coordina", "posgrado", "investigacion"],
+        ["quien", "coordina", "posgrado"],
+        ["quien", "coordina", "investigacion"],
+        ["quien", "esta", "cargo", "posgrado"],
+        ["quien", "esta", "cargo", "investigacion"]
+      ],
+      "respuesta": "El Mtro. Mario A. Cardeña Lara."
+    },
+    {
+      "id": "autoridades.quien_lleva_posgrado",
+      "categoria": "Autoridades",
+      "keywords": [
+        ["quien", "lleva", "posgrado"]
+      ],
+      "respuesta": "El Mtro. Mario A. Cardeña Lara es quien coordina esta área."
+    },
+    {
+      "id": "autoridades.quienes_coordinadora_tutorias",
+      "categoria": "Autoridades",
+      "keywords": [
+        ["quienes", "coordinadora", "tutorias"]
+      ],
+      "respuesta": "La Dra. Xóchitl Aline Mézquita Leana."
+    },
+    {
+      "id": "autoridades.coordina_tutorias",
+      "categoria": "Autoridades",
+      "keywords": [
+        ["coordina", "tutorias"]
+      ],
+      "respuesta": "La Dra. Xóchitl Aline Mézquita Leana es quien coordina esta área."
+    },
+    {
+      "id": "bufete.bufete_juridico",
+      "categoria": "Bufete jurídico",
+      "keywords": [
+        ["bufete", "juridico"],
+        ["bufete", "gratuito"],
+        ["quien", "coordina", "bufete", "juridico"],
+        ["quien", "dirige", "bufete", "juridico"],
+        ["director", "bufete", "juridico"],
+        ["directora", "bufete", "juridico"],
+        ["quien", "esta", "acargo", "bufete"],
+        ["quien", "lleva", "bufete"]
+      ],
+      "respuesta": "La Dra. Pilar Ventura Martínez aparece como coordinadora del Bufete Gratuito. También aparece el Dr. Jorge Armando Parra Dáger como coordinador adjunto."
+    },
+    {
+      "id": "profesores.contactar_profesor",
+      "categoria": "Profesores",
+      "keywords": [
+        ["contactar", "profesor"],
+        ["contactar", "maestro"],
+        ["hablar", "profesor"],
+        ["hablar", "maestro"],
+        ["puedo", "contactar", "directamente", "profesor"],
+        ["puedo", "hablar", "directamente", "profesor"],
+        ["puedo", "contactar", "directamente", "maestro"],
+        ["puedo", "hablar", "directamente", "maestro"],
+        ["como", "contacto", "profesor"],
+        ["como", "contacto", "maestro"],
+        ["como", "hablo", "con", "profesor"],
+        ["puedo", "hablar", "con", "profesor"]
+      ],
+      "respuesta": "La vía oficial de comunicación es a través del correo institucional del profesor, con formato ....@correo.uady.mx."
+    },
+    {
+      "id": "problemas.problema_academico",
+      "categoria": "Problemas académicos y trámites",
+      "keywords": [
+        ["problema", "academico"],
+        ["asuntos", "academicos"],
+        ["situaciones", "academicas"],
+        ["donde", "pregunto", "por", "asuntos", "academicos"],
+        ["donde", "atienden", "asuntos", "academicos"]
+      ],
+      "respuesta": "Si tienes un asunto académico, puedes acudir a Secretaría Académica o Tutorías, dependiendo del tipo de situación."
+    },
+    {
+      "id": "problemas.pagos",
+      "categoria": "Problemas académicos y trámites",
+      "keywords": [
+        ["pagos"]
+      ],
+      "respuesta": "Los pagos son realizados en Secretaría Administrativa o Control Escolar, según el trámite."
+    },
+    {
+      "id": "problemas.documentos_administrativos",
+      "categoria": "Problemas académicos y trámites",
+      "keywords": [
+        ["documentos", "administrativos"]
+      ],
+      "respuesta": "La entrega o solicitud de documentos se realiza en Secretaría Administrativa o Control Escolar, según la solicitud."
+    },
+    {
+      "id": "problemas.tramite_administrativo",
+      "categoria": "Problemas académicos y trámites",
+      "keywords": [
+        ["tramite", "administrativo"]
+      ],
+      "respuesta": "La mayoría de los tramites se realizan en Secretaría Administrativa o Control Escolar, según el trámite."
+    },
+    {
+      "id": "problemas.pagos_administrativos",
+      "categoria": "Problemas académicos y trámites",
+      "keywords": [
+        ["pagos", "administrativos"],
+        ["donde", "pregunto", "por", "pagos"],
+        ["donde", "pregunto", "por", "pagos", "documentos", "administrativos"],
+        ["donde", "pregunto", "por", "documentos"],
+        ["donde", "hago", "documentos", "administrativos"],
+        ["donde", "hago", "gestiones", "administrativas"],
+        ["donde", "pregunto", "por", "tramites", "administrativos"],
+        ["quien", "pregunto", "por", "pagos"]
+      ],
+      "respuesta": "En Secretaría Administrativa o Control Escolar, según el trámite."
+    },
+    {
+      "id": "duracion.duracion_carrera",
+      "categoria": "Duración y créditos",
+      "keywords": [
+        ["duracion", "carrera"],
+        ["duracion", "licenciatura"],
+        ["cuanto", "dura", "derecho"],
+        ["cuantos", "semestres"],
+        ["informacion", "licenciatura"],
+        ["duracion", "carrera", "derecho"],
+        ["dura", "derecho"],
+        ["carrera", "derecho"],
+        ["cuanto", "dura", "carrera", "derecho"],
+        ["cuantos", "semestres", "dura"],
+        ["cuantos", "semestres", "tiene", "derecho"],
+        ["cuantos", "anos", "dura", "derecho"],
+        ["cuantos", "anos", "derecho"],
+        ["en", "cuantos", "semestres", "termino", "derecho"]
+      ],
+      "respuesta": "La Licenciatura en Derecho tiene una duración de entre 9 y 10 semestres, dependiendo del plan de estudios con el cual hayas ingresado."
+    },
+    {
+      "id": "duracion.titulo_obtengo",
+      "categoria": "Duración y créditos",
+      "keywords": [
+        ["titulo", "obtengo"],
+        ["que", "titulo"],
+        ["que", "titulo", "obtengo"],
+        ["cuales", "titulo", "obtengo"],
+        ["que", "titulo", "recibo"],
+        ["que", "grado", "obtengo"],
+        ["que", "grado", "academico", "obtengo"],
+        ["como", "titulo"],
+        ["que", "voy", "ser", "titulado"]
+      ],
+      "respuesta": "La información del nuevo plan indica que el título será de Licenciado o Licenciada en Derecho."
+    },
+    {
+      "id": "duracion.creditos_tiene",
+      "categoria": "Duración y créditos",
+      "keywords": [
+        ["cuantos", "creditos", "carrera"],
+        ["creditos", "tiene"]
+      ],
+      "respuesta": "El plan actualmente publicado contempla 400 créditos."
+    },
+    {
+      "id": "duracion.tipos_asignaturas",
+      "categoria": "Duración y créditos",
+      "keywords": [
+        ["tipos", "asignaturas"],
+        ["tipos", "materias"],
+        ["que", "tipos", "asignaturas", "existen"],
+        ["que", "tipos", "materias", "existen"],
+        ["que", "tipos", "materias", "hay"],
+        ["como", "se", "dividen", "asignaturas"],
+        ["como", "se", "dividen", "materias"],
+        ["cuales", "tipos", "materias"]
+      ],
+      "respuesta": "Existen asignaturas institucionales, obligatorias disciplinares/profesionalizantes, optativas, libres, además de práctica profesional y servicio social."
+    },
+    {
+      "id": "duracion.horario_estudia",
+      "categoria": "Duración y créditos",
+      "keywords": [
+        ["horario", "estudia"],
+        ["horario", "clases"],
+        ["horario", "carrera"],
+        ["en", "que", "horario", "se", "estudia"],
+        ["cual", "horario", "carrera"],
+        ["cual", "horario", "derecho"],
+        ["que", "hora", "estudian"],
+        ["en", "que", "horario", "estan", "clases"],
+        ["cuando", "estudio"]
+      ],
+      "respuesta": "Los primeros cuatro semestres se imparten por la mañana y los seis restantes por la tarde, según la información general publicada."
+    },
+    {
+      "id": "duracion.areas_competencia",
+      "categoria": "Duración y créditos",
+      "keywords": [
+        ["areas", "competencia"],
+        ["trabajar", "egresado"],
+        ["cuales", "areas", "competencia", "egresado"],
+        ["en", "que", "areas", "puede", "trabajar", "egresado"],
+        ["que", "puede", "hacer", "egresado", "derecho"],
+        ["que", "hace", "licenciado", "en", "derecho"],
+        ["en", "que", "puede", "trabajar", "egresado"]
+      ],
+      "respuesta": "Las áreas de competencia del egresado incluyen asesoría, litigación, procuración e impartición de justicia; el nuevo plan también incorpora la solución de conflictos por medios alternos."
+    },
+    {
+      "id": "duracion.vacaciones",
+      "categoria": "Duración y créditos",
+      "keywords": [
+        ["vacaciones"]
+      ],
+      "respuesta": "La Facultad de derecho cuenta con 2 periodos vacacionales al año. El de verano que empieza a principios de mayo y termina a principios de agosto y el de Invierno que empieza a finales de noviembre y acaba a finales de enero. Para informacion mas especifica consulta tu calendario escolar."
+    },
+    {
+      "id": "titulo.malla",
+      "categoria": "Título y plan de estudios",
+      "keywords": [
+        ["plan", "estudios"],
+        ["malla"]
+      ],
+      "respuesta": "La Secretaría Académica actualmente publica la malla del MEFI 2026. La página general todavía conserva información del MEFI 2019, por lo que es importante identificar TU plan de estudios."
+    },
+    {
+      "id": "titulo.cuantos_creditos",
+      "categoria": "Título y plan de estudios",
+      "keywords": [
+        ["cuantos", "creditos", "tiene", "carrera"],
+        ["cuantos", "creditos", "tiene"],
+        ["cuantos", "creditos"],
+        ["cuantos", "creditos", "necesito"],
+        ["cuantos", "creditos", "necesito", "para", "graduarme"],
+        ["cuantos", "creditos", "necesito", "para", "terminar"],
+        ["cuantos", "creditos", "tiene", "derecho"],
+        ["creditos", "carrera"],
+        ["creditos", "carrera", "derecho"]
+      ],
+      "respuesta": "El plan publicado contempla 400 créditos."
+    },
+    {
+      "id": "titulo.necesito_b1",
+      "categoria": "Título y plan de estudios",
+      "keywords": [
+        ["que", "nivel", "ingles", "necesito"],
+        ["que", "nivel", "ingles", "piden"],
+        ["que", "nivel", "debo", "acreditar"],
+        ["que", "nivel", "ingles", "debo", "tener"],
+        ["que", "ingles", "necesito"],
+        ["necesito", "b1"],
+        ["cual", "nivel", "ingles"]
+      ],
+      "respuesta": "El nivel de inglés requerido es B1, conforme al Marco Común Europeo de Referencia."
+    },
+    {
+      "id": "titulo.cuales_malla_curricular",
+      "categoria": "Título y plan de estudios",
+      "keywords": [
+        ["donde", "veo", "malla", "curricular"],
+        ["donde", "consulto", "malla", "curricular"],
+        ["donde", "veo", "plan", "estudios"],
+        ["donde", "esta", "malla", "curricular"],
+        ["cuales", "malla", "curricular"]
+      ],
+      "respuesta": "La malla curricular puede consultarse en la sección oficial de la Secretaría Académica, donde actualmente se publica la malla del Plan de Licenciatura en Derecho MEFI 2026."
+    },
+    {
+      "id": "titulo.cuales_plan_actual",
+      "categoria": "Título y plan de estudios",
+      "keywords": [
+        ["cual", "plan", "estudios", "esta", "vigente"],
+        ["cual", "plan", "esta", "vigente"],
+        ["que", "plan", "estudios", "esta", "vigente"],
+        ["que", "plan", "estudios", "manejan"],
+        ["cuales", "plan", "actual"]
+      ],
+      "respuesta": "La Secretaría Académica actualmente publica la malla del MEFI 2026. La página general todavía conserva información del MEFI 2019, por lo que es importante identificar el plan de estudios del estudiante antes de responder."
+    },
+    {
+      "id": "ingles.necesito_ingles",
+      "categoria": "Inglés y movilidad",
+      "keywords": [
+        ["necesito", "ingles"],
+        ["necesito", "estudiar", "ingles"],
+        ["necesario", "ingles"],
+        ["necesito", "hablar", "ingles"],
+        ["necesito", "ingles", "para", "derecho"],
+        ["hay", "que", "acreditar", "ingles"],
+        ["hay", "que", "presentar", "ingles"]
+      ],
+      "respuesta": "Sí. El plan publicado establece acreditar B1 de inglés para poder inscribirse al séptimo semestre."
+    },
+    {
+      "id": "ingles.nivel_ingles",
+      "categoria": "Inglés y movilidad",
+      "keywords": [
+        ["nivel", "ingles"]
+      ],
+      "respuesta": "El nivel de inglés requerido es B1, conforme al Marco Común Europeo de Referencia, siendo este el nivel minimo para poder inscribirse al septimo semestre"
+    },
+    {
+      "id": "ingles.cuando_ingles",
+      "categoria": "Inglés y movilidad",
+      "keywords": [
+        ["cuando", "ingles"],
+        ["cuando", "b1"],
+        ["cuando", "acredito", "b1"],
+        ["cuando", "necesario", "b1"],
+        ["en", "que", "semestre", "necesito", "b1"],
+        ["cuando", "hay", "que", "presentar", "ingles"],
+        ["cuando", "debo", "tener", "b1"]
+      ],
+      "respuesta": "Debes acreditar el nivel B1 de inglés para poder inscribirte al séptimo semestre."
+    },
+    {
+      "id": "ingles.movilidad",
+      "categoria": "Inglés y movilidad",
+      "keywords": [
+        ["movilidad"],
+        ["puedo", "hacer", "movilidad"],
+        ["puedo", "hacer", "movilidad", "estudiantil"],
+        ["hay", "movilidad"],
+        ["puedo", "irme", "intercambio"],
+        ["puedo", "hacer", "intercambio"],
+        ["existe", "movilidad"]
+      ],
+      "respuesta": "Sí. El plan contempla movilidad estudiantil que la Facultad va publicando, dependiendo de los convenios que vayan saliendo."
+    },
+    {
+      "id": "ingles.intercambio",
+      "categoria": "Inglés y movilidad",
+      "keywords": [
+        ["intercambio"]
+      ],
+      "respuesta": "Sí. El plan contempla intercambio estudiantil que la Facultad va publicando, dependiendo de los convenios que vayan saliendo."
+    },
+    {
+      "id": "ingles.creditos_movilidad",
+      "categoria": "Inglés y movilidad",
+      "keywords": [
+        ["creditos", "movilidad"],
+        ["porcentaje", "movilidad"],
+        ["cuantos", "creditos", "puedo", "hacer", "en", "movilidad"],
+        ["cuantos", "creditos", "puedo", "cursar", "en", "movilidad"],
+        ["cuantos", "creditos", "puedo", "hacer", "intercambio"],
+        ["que", "porcentaje", "puedo", "hacer", "en", "movilidad"],
+        ["cuanto", "puedo", "hacer", "en", "movilidad"]
+      ],
+      "respuesta": "El plan permite hasta 20 % de los créditos en programas reconocidos de otras instituciones nacionales o extranjeras."
+    },
+    {
+      "id": "constancias.constancia",
+      "categoria": "Constancias",
+      "keywords": [
+        ["solicitar", "constancia"],
+        ["tramitar", "constancia"],
+        ["sacar", "constancia"],
+        ["pedir", "constancia"],
+        ["tramito", "constancia"],
+        ["saco", "constancia"],
+        ["constancia"],
+        ["como", "solicito", "constancia"],
+        ["como", "obtengo", "constancia"],
+        ["como", "pedir", "constancia"],
+        ["donde", "solicito", "constancia"],
+        ["donde", "puedo", "solicitar", "constancia"],
+        ["como", "saco", "constancia"],
+        ["como", "sacar", "constancia"],
+        ["donde", "saco", "constancia"],
+        ["donde", "hago", "constancia"]
+      ],
+      "respuesta": "Puedes solicitar una constancia mediante el Formulario Constancia institucional, ingresando con tu correo institucional, o presencialmente en Control Escolar. https://forms.office.com/Pages/ResponsePage.aspx?id=nqyDK0gk30WTGUjYYjal6svikakWeu5DnAap57UzwIZUMVhWNVJFV0lOMjRaU0dCNjlYUFJNSVBRTS4u"
+    },
+    {
+      "id": "constancias.varias_constancias",
+      "categoria": "Constancias",
+      "keywords": [
+        ["varias", "constancias"],
+        ["puedo", "pedir", "varias", "constancias"],
+        ["puedo", "solicitar", "varias", "constancias"],
+        ["puedo", "pedir", "mas", "constancia"],
+        ["puedo", "sacar", "varias", "constancias"]
+      ],
+      "respuesta": "Sí, la Facultad indica que pueden solicitarse una o varias constancias."
+    },
+    {
+      "id": "constancias.cuesta_constancia",
+      "categoria": "Constancias",
+      "keywords": [
+        ["cuesta", "constancia"],
+        ["precio", "constancia"],
+        ["cuanto", "cuesta", "constancia"],
+        ["cuales", "precio", "constancia"],
+        ["cuanto", "debo", "pagar", "por", "constancia"],
+        ["costo", "constancia"]
+      ],
+      "respuesta": "La información publicada indica $15 MXN por cada constancia, con referencia de costo desde el 10 de enero de 2024. Conviene verificar que el importe siga vigente antes de pagar."
+    },
+    {
+      "id": "constancias.pago_constancia",
+      "categoria": "Constancias",
+      "keywords": [
+        ["pago", "constancia"],
+        ["pagar", "constancia"],
+        ["como", "pago", "constancia"],
+        ["donde", "pago", "constancia"],
+        ["como", "se", "paga", "constancia"],
+        ["donde", "puedo", "pagar", "constancia"]
+      ],
+      "respuesta": "La constancia puede pagarse mediante transferencia o ventanilla bancaria, o en la caja de la Facultad, según el procedimiento publicado."
+    },
+    {
+      "id": "constancias.tarda_constancia",
+      "categoria": "Constancias",
+      "keywords": [
+        ["tarda", "constancia"],
+        ["tiempo", "constancia"]
+      ],
+      "respuesta": "Aproximadamente en un tiempo de 1 a 3 días hábiles después de realizar la solicitud."
+    },
+    {
+      "id": "constancias.recojo_constancia",
+      "categoria": "Constancias",
+      "keywords": [
+        ["recojo", "constancia"],
+        ["recoger", "constancia"],
+        ["donde", "recojo", "constancia"],
+        ["donde", "recoger", "constancia"],
+        ["donde", "puedo", "recoger", "constancia"],
+        ["donde", "entregan", "constancia"],
+        ["donde", "me", "entregan", "constancia"]
+      ],
+      "respuesta": "Las constancias se recogen presencialmente en Control Escolar."
+    },
+    {
+      "id": "constancias.foto_constancia",
+      "categoria": "Constancias",
+      "keywords": [
+        ["foto", "constancia"],
+        ["fotografia", "constancia"],
+        ["necesito", "foto", "para", "constancia"],
+        ["necesito", "fotografia"],
+        ["necesito", "fotografia", "para", "constancia"],
+        ["que", "foto", "necesito", "para", "constancia"],
+        ["que", "fotografia", "piden", "para", "constancia"]
+      ],
+      "respuesta": "La información publicada indica que al recoger la constancia debe proporcionarse una fotografía reciente tamaño infantil, blanco y negro, en papel mate, con blusa o camisa blanca."
+    },
+    {
+      "id": "constancias.cuantas_constancias_puedo_pedir",
+      "categoria": "Constancias",
+      "keywords": [
+        ["cuantas", "constancias", "puedo", "pedir"]
+      ],
+      "respuesta": "La Facultad indica que pueden solicitarse una o varias constancias."
+    },
+    {
+      "id": "constancias.cuanto_tarda_constancia",
+      "categoria": "Constancias",
+      "keywords": [
+        ["cuanto", "tarda", "constancia"],
+        ["cuando", "me", "entregan", "constancia"],
+        ["cuantos", "dias", "tarda", "constancia"],
+        ["tiempo", "entrega", "constancia"]
+      ],
+      "respuesta": "La información publicada señala un tiempo de 1 a 3 días hábiles después de realizar la solicitud."
+    },
+    {
+      "id": "constancias.horario_control_escolar_para",
+      "categoria": "Constancias",
+      "keywords": [
+        ["que", "horario", "tiene", "control", "escolar", "para", "constancias"],
+        ["horario", "control", "escolar", "para", "constancias"],
+        ["que", "hora", "atiende", "control", "escolar"],
+        ["que", "hora", "puedo", "ir", "control", "escolar"]
+      ],
+      "respuesta": "El horario de Control Escolar para constancias es de lunes a viernes, de 9:00 a 16:30 horas."
+    },
+    {
+      "id": "tutorias.tutorias",
+      "categoria": "Tutorías",
+      "keywords": [
+        ["que", "son", "tutorias"],
+        ["para", "que", "tutorias"],
+        ["tutorias"],
+        ["que", "tutorias"],
+        ["para", "que", "sirven", "tutorias"],
+        ["para", "que", "sirve", "tutoria"]
+      ],
+      "respuesta": "Las tutorías son un proceso de acompañamiento y orientación personal y académica para estudiantes de la Facultad."
+    },
+    {
+      "id": "tutorias.problemas_tutorias",
+      "categoria": "Tutorías",
+      "keywords": [
+        ["problemas", "tutorias"],
+        ["que", "problemas", "puedo", "consultar", "tutorias"],
+        ["que", "problemas", "atiende", "tutorias"],
+        ["que", "puedo", "consultar", "en", "tutorias"],
+        ["en", "que", "ayudan", "tutorias"],
+        ["para", "que", "puedo", "ir", "tutorias"]
+      ],
+      "respuesta": "Tutorías puede orientarte sobre problemas personales y académicos, dificultades durante el programa, estrategias de aprendizaje y desarrollo académico y profesional, entre otros temas."
+    },
+    {
+      "id": "tutorias.tutorias_individuales",
+      "categoria": "Tutorías",
+      "keywords": [
+        ["tutorias", "individuales"],
+        ["hay", "tutorias", "individuales"],
+        ["puedo", "tener", "tutoria", "individual"],
+        ["puedo", "hacer", "tutoria", "individual"]
+      ],
+      "respuesta": "Sí, las tutorías pueden ser individuales."
+    },
+    {
+      "id": "tutorias.tutorias_grupales",
+      "categoria": "Tutorías",
+      "keywords": [
+        ["tutorias", "grupales"],
+        ["hay", "tutorias", "grupales"],
+        ["existen", "tutorias", "grupales"],
+        ["puedo", "hacer", "tutoria", "grupal"],
+        ["hay", "tutoria", "en", "grupo"]
+      ],
+      "respuesta": "Sí, también existen tutorías grupales."
+    },
+    {
+      "id": "tutorias.tutorias_practicas",
+      "categoria": "Tutorías",
+      "keywords": [
+        ["tutorias", "practicas"],
+        ["tutorias", "me", "ayuda", "con", "practicas", "profesionales"],
+        ["tutorias", "puede", "ayudarme", "con", "practicas"],
+        ["tutorias", "orienta", "practicas", "profesionales"],
+        ["puedo", "preguntar", "tutorias", "por", "practicas"]
+      ],
+      "respuesta": "Sí, Tutorías puede orientarte sobre prácticas profesionales."
+    },
+    {
+      "id": "tutorias.tutorias_titulacion",
+      "categoria": "Tutorías",
+      "keywords": [
+        ["tutorias", "titulacion"],
+        ["tutorias", "me", "ayuda", "con", "titulacion"],
+        ["tutorias", "puede", "ayudarme", "con", "titulacion"],
+        ["tutorias", "orienta", "sobre", "titulacion"],
+        ["puedo", "preguntar", "tutorias", "por", "titulacion"]
+      ],
+      "respuesta": "Sí, entre los servicios de Tutorías está la orientación sobre opciones de titulación."
+    },
+    {
+      "id": "tutorias.tutorias_problemas_personales",
+      "categoria": "Tutorías",
+      "keywords": [
+        ["tutorias", "problemas", "personales"],
+        ["tutorias", "atiende", "problemas", "personales"],
+        ["puedo", "hablar", "con", "tutorias", "problema", "personal"],
+        ["puedo", "contarle", "problema", "personal", "tutorias"],
+        ["tutorias", "me", "ayuda", "con", "problemas", "personales"],
+        ["puedo", "consultar", "problemas", "personales"]
+      ],
+      "respuesta": "Sí. Tutorías brinda orientación y acompañamiento ante problemas personales que puedan afectar tu trayectoria académica."
+    },
+    {
+      "id": "tutorias.tutorias_canalizar",
+      "categoria": "Tutorías",
+      "keywords": [
+        ["tutorias", "canalizar"],
+        ["tutorias", "canaliza"],
+        ["tutorias", "puede", "canalizarme"],
+        ["puedo", "canalizarme", "en", "tutorias"],
+        ["tutorias", "puede", "enviarme", "otra", "area"]
+      ],
+      "respuesta": "Sí, Tutorías puede canalizarte al Departamento de Orientación y Consejo Educativo cuando sea necesario."
+    },
+    {
+      "id": "tutorias.quien_coordina_tutorias",
+      "categoria": "Tutorías",
+      "keywords": [
+        ["quien", "coordina", "tutorias"],
+        ["quien", "lleva", "tutorias"],
+        ["quien", "esta", "cargo", "tutorias"],
+        ["quien", "se", "encarga", "tutorias"],
+        ["quien", "dirige", "tutorias"]
+      ],
+      "respuesta": "La Dra. Xóchitl Aline Mézquita Leana coordina Tutorías."
+    },
+    {
+      "id": "tutorias.que_hacen_tutorias",
+      "categoria": "Tutorías",
+      "keywords": [
+        ["que", "hacen", "tutorias"]
+      ],
+      "respuesta": "Las tutorías brindan acompañamiento y orientación personal y académica a estudiantes de la Facultad."
+    },
+    {
+      "id": "tutorias.tutorias_orienta_servicio_social",
+      "categoria": "Tutorías",
+      "keywords": [
+        ["tutorias", "me", "ayuda", "con", "servicio", "social"],
+        ["tutorias", "puede", "ayudarme", "con", "servicio", "social"],
+        ["tutorias", "orienta", "servicio", "social"],
+        ["puedo", "preguntar", "tutorias", "por", "servicio", "social"]
+      ],
+      "respuesta": "Sí, Tutorías puede asesorarte sobre la selección de servicio social."
+    },
+    {
+      "id": "tutorias.donde_pregunto_por_servicio",
+      "categoria": "Tutorías",
+      "keywords": [
+        ["donde", "pregunto", "por", "servicio", "social"]
+      ],
+      "respuesta": "Puedes acudir a Secretaría Académica y/o Tutorías para recibir orientación sobre servicio social."
+    },
+    {
+      "id": "tutorias.donde_pregunto_por_practicas",
+      "categoria": "Tutorías",
+      "keywords": [
+        ["donde", "pregunto", "por", "practicas", "profesionales"]
+      ],
+      "respuesta": "Puedes acudir a Secretaría Académica y/o Tutorías para recibir orientación sobre prácticas profesionales."
+    },
+    {
+      "id": "tutorias.donde_pregunto_por_titulacion",
+      "categoria": "Tutorías",
+      "keywords": [
+        ["donde", "pregunto", "por", "titulacion"]
+      ],
+      "respuesta": "Puedes acudir a Tutorías para recibir orientación sobre las opciones de titulación."
+    },
+    {
+      "id": "actividades.actividades_estudiantes",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["actividades", "estudiantes"]
+      ],
+      "respuesta": "Sí. La Facultad publica actividades académicas y estudiantiles mediante noticias, avisos y convocatorias. Tambien la Sociedad de Alumnos y el Consejo Estudiantil, tienden a publicar sus eventos en sus redes sociales."
+    },
+    {
+      "id": "actividades.eventos",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["eventos"]
+      ],
+      "respuesta": "Los eventos se publican mediante noticias, avisos y convocatorias de la Facultad o en las redes sociales de Sociead de Alumnos o Consejo Estudiantil."
+    },
+    {
+      "id": "actividades.extracurriculares",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["extracurriculares"],
+        ["hay", "actividades", "extracurriculares"]
+      ],
+      "respuesta": "Sí. Las actividades extracurriculares pueden publicarse mediante convocatorias y avisos de la Facultad."
+    },
+    {
+      "id": "actividades.concursos",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["concursos"],
+        ["hay", "concursos"],
+        ["hay", "concursos", "para", "alumnos"],
+        ["existen", "concursos"],
+        ["hay", "concursos", "estudiantiles"]
+      ],
+      "respuesta": "Sí. La Facultad ha publicado convocatorias de concursos para estudiantes."
+    },
+    {
+      "id": "actividades.congresos",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["congresos"],
+        ["hay", "congresos"],
+        ["hay", "congresos", "en", "facultad"],
+        ["existen", "congresos"]
+      ],
+      "respuesta": "Sí. La Facultad publica convocatorias y actividades académicas relacionadas con congresos."
+    },
+    {
+      "id": "actividades.derechos_humanos",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["derechos", "humanos"],
+        ["hay", "actividades", "derechos", "humanos"],
+        ["hay", "eventos", "derechos", "humanos"],
+        ["hay", "concursos", "derechos", "humanos"],
+        ["existen", "actividades", "derechos", "humanos"]
+      ],
+      "respuesta": "Sí. La Facultad ha publicado actividades relacionadas con Derechos Humanos, como un concurso de proyectos de impacto social."
+    },
+    {
+      "id": "actividades.hay_actividades_para_estudiantes",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["hay", "actividades", "para", "estudiantes"],
+        ["hay", "actividades", "para", "alumnos"]
+      ],
+      "respuesta": "Sí. La Facultad publica actividades académicas y estudiantiles mediante noticias, avisos y convocatorias."
+    },
+    {
+      "id": "actividades.que_actividades_hay_para",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["que", "actividades", "hay", "para", "estudiantes"]
+      ],
+      "respuesta": "La Facultad publica actividades académicas y estudiantiles mediante noticias, avisos y convocatorias."
+    },
+    {
+      "id": "actividades.donde_veo_actividades",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["donde", "veo", "actividades"],
+        ["donde", "publican", "actividades"]
+      ],
+      "respuesta": "Las actividades se publican mediante noticias, avisos y convocatorias de la Facultad."
+    },
+    {
+      "id": "actividades.donde_veo_eventos",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["donde", "veo", "eventos"],
+        ["donde", "puedo", "ver", "eventos"],
+        ["donde", "veo", "eventos", "facultad"]
+      ],
+      "respuesta": "Los eventos se publican mediante noticias, avisos y convocatorias de la Facultad."
+    },
+    {
+      "id": "actividades.hay_eventos",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["hay", "eventos"]
+      ],
+      "respuesta": "Sí. La Facultad publica actividades y eventos académicos y estudiantiles mediante noticias, avisos y convocatorias."
+    },
+    {
+      "id": "actividades.hay_eventos_extracurriculares",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["que", "actividades", "extracurriculares", "hay"],
+        ["hay", "eventos", "extracurriculares"],
+        ["donde", "veo", "actividades", "extracurriculares"]
+      ],
+      "respuesta": "Las actividades extracurriculares pueden publicarse mediante convocatorias y avisos de la Facultad."
+    },
+    {
+      "id": "actividades.donde_veo_concursos",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["donde", "veo", "concursos"]
+      ],
+      "respuesta": "Las convocatorias de concursos para estudiantes se publican mediante los avisos y medios oficiales de la Facultad."
+    },
+    {
+      "id": "actividades.hay_eventos_academicos",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["hay", "eventos", "academicos"]
+      ],
+      "respuesta": "Sí. La Facultad publica actividades académicas, incluyendo actividades relacionadas con congresos."
+    },
+    {
+      "id": "actividades.donde_veo_congresos",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["donde", "veo", "congresos"]
+      ],
+      "respuesta": "Las convocatorias y actividades relacionadas con congresos se publican mediante los medios oficiales de la Facultad."
+    },
+    {
+      "id": "actividades.hay_ceremonia_graduacion",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["hay", "ceremonia", "graduacion"]
+      ],
+      "respuesta": "Sí. La Facultad realiza ceremonias de graduación. Por ejemplo, realizó la ceremonia académica de la generación 2020–2025 el 11 de julio de 2025."
+    },
+    {
+      "id": "actividades.hay_graduaciones",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["hay", "graduaciones"]
+      ],
+      "respuesta": "Sí. La Facultad realiza ceremonias de graduación."
+    },
+    {
+      "id": "actividades.cuando_graduacion",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["cuando", "graduacion"]
+      ],
+      "respuesta": "La fecha de cada ceremonia de graduación depende de la generación y se publica mediante los avisos oficiales de la Facultad."
+    },
+    {
+      "id": "actividades.donde_veo_fecha_graduacion",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["donde", "veo", "fecha", "graduacion"]
+      ],
+      "respuesta": "Las fechas de las ceremonias de graduación se publican mediante los avisos oficiales de la Facultad."
+    },
+    {
+      "id": "actividades.reconocen_mejores_promedios",
+      "categoria": "Actividades y eventos",
+      "keywords": [
+        ["se", "reconocen", "mejores", "promedios"],
+        ["reconocen", "mejores", "promedios"],
+        ["hay", "reconocimiento", "para", "mejores", "promedios"],
+        ["premian", "mejores", "promedios"],
+        ["hay", "premios", "por", "promedio"]
+      ],
+      "respuesta": "Sí. En la ceremonia de la generación 2020–2025 se reconocieron estudiantes con mejores promedios."
+    },
+    {
+      "id": "orientacion.problema_personal",
+      "categoria": "Orientación y problemas",
+      "keywords": [
+        ["problema", "personal"],
+        ["tengo", "problema", "personal"],
+        ["tengo", "problema", "personal", "que", "afecta", "estudios"],
+        ["quien", "acudo", "si", "tengo", "problema", "personal"],
+        ["quien", "me", "ayuda", "con", "problema", "personal"]
+      ],
+      "respuesta": "Tutorías puede orientarte y canalizarte cuando sea necesario si tienes un problema personal que afecta tus estudios."
+    },
+    {
+      "id": "orientacion.problema_materia",
+      "categoria": "Orientación y problemas",
+      "keywords": [
+        ["problema", "materia"],
+        ["tengo", "problemas", "con", "materia"],
+        ["no", "entiendo", "materia"],
+        ["tengo", "dificultades", "con", "materia"],
+        ["quien", "me", "ayuda", "con", "materia"],
+        ["donde", "pregunto", "por", "materia"]
+      ],
+      "respuesta": "Si tienes problemas con una materia, primero puedes acudir a Tutorías o Secretaría Académica."
+    },
+    {
+      "id": "orientacion.problema_inscripcion",
+      "categoria": "Orientación y problemas",
+      "keywords": [
+        ["problema", "inscripcion"],
+        ["tengo", "problemas", "con", "inscripcion"],
+        ["inscripcion", "tiene", "problema"],
+        ["no", "puedo", "inscribirme"],
+        ["problemas", "para", "inscribirme"],
+        ["quien", "me", "ayuda", "con", "inscripcion"]
+      ],
+      "respuesta": "Si el problema es académico, puedes acudir a Secretaría Académica; si es administrativo o escolar, debes acudir a Control Escolar."
+    },
+    {
+      "id": "orientacion.problemas_tramite",
+      "categoria": "Orientación y problemas",
+      "keywords": [
+        ["problemas", "tramite"],
+        ["tengo", "problemas", "con", "tramite"],
+        ["tengo", "problema", "administrativo"],
+        ["tengo", "problemas", "con", "tramite", "escolar"],
+        ["donde", "pregunto", "por", "tramite"],
+        ["quien", "me", "ayuda", "con", "tramite"]
+      ],
+      "respuesta": "Si tienes problemas con un trámite, puedes acudir a Control Escolar o Secretaría Administrativa, dependiendo del tipo de trámite."
+    },
+    {
+      "id": "orientacion.problema_tesis",
+      "categoria": "Orientación y problemas",
+      "keywords": [
+        ["problema", "tesis"],
+        ["tengo", "problemas", "con", "tesis"],
+        ["donde", "pregunto", "por", "tesis"],
+        ["quien", "me", "ayuda", "con", "tesis"],
+        ["quien", "pregunto", "por", "tesis"]
+      ],
+      "respuesta": "Si tienes problemas con tu tesis, puedes acudir a Secretaría Académica."
+    },
+    {
+      "id": "orientacion.problemas_servicio_social",
+      "categoria": "Orientación y problemas",
+      "keywords": [
+        ["problemas", "servicio", "social"],
+        ["tengo", "problemas", "con", "servicio", "social"],
+        ["quien", "me", "ayuda", "con", "servicio", "social"],
+        ["quien", "pregunto", "por", "servicio", "social"]
+      ],
+      "respuesta": "Para problemas o dudas sobre servicio social puedes acudir a Secretaría Académica y/o Tutorías."
+    },
+    {
+      "id": "orientacion.problemas_practicas",
+      "categoria": "Orientación y problemas",
+      "keywords": [
+        ["problemas", "practicas"],
+        ["tengo", "problemas", "con", "practicas", "profesionales"],
+        ["quien", "me", "ayuda", "con", "practicas", "profesionales"],
+        ["donde", "pregunto", "por", "practicas"],
+        ["quien", "pregunto", "por", "practicas", "profesionales"]
+      ],
+      "respuesta": "Para problemas o dudas sobre prácticas profesionales puedes acudir a Secretaría Académica y/o Tutorías."
+    },
+    {
+      "id": "orientacion.orientacion_academica",
+      "categoria": "Orientación y problemas",
+      "keywords": [
+        ["orientacion", "academica"],
+        ["necesito", "orientacion", "academica"],
+        ["necesito", "ayuda", "academica"],
+        ["necesito", "asesoria", "academica"],
+        ["quien", "me", "puede", "orientar", "academicamente"],
+        ["donde", "puedo", "recibir", "orientacion", "academica"],
+        ["quien", "me", "ayuda", "con", "orientacion", "academica"]
+      ],
+      "respuesta": "Puedes acudir a Tutorías para recibir orientación académica."
+    },
+    {
+      "id": "orientacion.tengo_problema_academico",
+      "categoria": "Orientación y problemas",
+      "keywords": [
+        ["tengo", "problema", "academico"],
+        ["tengo", "problemas", "con", "estudios"]
+      ],
+      "respuesta": "Si tienes un problema académico, puedes acudir a Secretaría Académica o Tutorías, dependiendo del problema."
+    },
+    {
+      "id": "orientacion.donde_atienden_problemas_academicos",
+      "categoria": "Orientación y problemas",
+      "keywords": [
+        ["donde", "atienden", "problemas", "academicos"]
+      ],
+      "respuesta": "Puedes acudir a Secretaría Académica o Tutorías, dependiendo del problema."
+    },
+    {
+      "id": "consejeros.consejero_academico",
+      "categoria": "Consejeros",
+      "keywords": [
+        ["que", "es", "consejero", "academico"],
+        ["consejero", "academico"]
+      ],
+      "respuesta": "Un consejero académico es la persona encargada de orientarte en tu trayectoria escolar: elección y avance de materias, dudas sobre tu plan de estudios y apoyo para resolver problemas relacionados con tus clases. Esta función se apoya en Tutorías y en Secretaría Académica."
+    },
+    {
+      "id": "consejeros.diferencia_consejero_academico_estudiantil",
+      "categoria": "Consejeros",
+      "keywords": [
+        ["diferencia", "consejero", "academico", "estudiantil"]
+      ],
+      "respuesta": "El consejero académico te orienta en temas escolares (materias, avance en tu plan de estudios, dudas sobre tus clases), mientras que el consejero estudiantil te representa como alumno ante el Consejo Técnico y otras autoridades de la Facultad, llevando la voz de los estudiantes. Uno te orienta académicamente y el otro te representa institucionalmente."
+    },
+    {
+      "id": "consejeros.consejero_estudiantil",
+      "categoria": "Consejeros",
+      "keywords": [
+        ["consejero", "estudiantil"]
+      ],
+      "respuesta": "El consejero estudiantil es quien te representa como alumno ante el Consejo Técnico y otras autoridades de la Facultad, llevando la voz de los estudiantes. A diferencia del consejero académico, que te orienta en temas escolares, el consejero estudiantil se enfoca en la representación estudiantil."
+    },
+    {
+      "id": "revalidacion.revalidacion_materias",
+      "categoria": "Revalidación",
+      "keywords": [
+        ["revalidacion", "materias"],
+        ["como", "revalidacion"],
+        ["proceso", "revalidacion"],
+        ["documentos", "revalidacion"],
+        ["revalidar", "materias"]
+      ],
+      "respuesta": "El proceso especifico para realizar tu proceso de revalidación lo tienes que consultar en Secretaría Académica."
+    },
+    {
+      "id": "general.hay_luz_hoy",
+      "categoria": "General",
+      "keywords": [
+        ["hay", "luz", "hoy"],
+        ["hay", "luz", "ahora"]
+      ],
+      "respuesta": "Por lo general siempre hay luz en la facultad, si tienes dudas favor de utilizar los canales oficiales de comunicación que usa la facultad."
+    },
+    {
+      "id": "sobre.que_tipo_cosas_respondes",
+      "categoria": "Sobre el bot",
+      "keywords": [
+        ["que", "tipo", "cosas", "respondes"],
+        ["en", "que", "me", "puedes", "ayudar"],
+        ["en", "que", "puedes", "ayudarme"]
+      ],
+      "respuesta": "Puedo ayudarte con dudas de la Facultad de Derecho como: ubicación y contacto, horarios de Control Escolar, Secretaría Académica y Secretaría Administrativa, trámites como constancias, información del plan de estudios, tutorías, biblioteca, sala de cómputo, impresiones y copias, sociedad de alumnos, y actividades o eventos, entre otros temas. Si tienes una duda puntual, pregúntame directamente 🤟🏻"
+    },
+    {
+      "id": "agradecimientos.gracias",
+      "categoria": "Agradecimientos",
+      "prioridad": -1,
+      "keywords": [
+        ["gracias"],
+        ["muchas", "gracias"],
+        ["te", "agradezco"]
+      ],
+      "respuesta": "De nada! Cualquier otra duda que tengas acerca de la Facultad de Derecho, aquí estoy para ayudarte 🩷🩵"
+    },
+    {
+      "id": "insultos.pendejo",
+      "categoria": "Insultos",
+      "keywords": [
+        ["pendejo"],
+        ["pendeja"],
+        ["estupido"],
+        ["estupida"],
+        ["idiota"],
+        ["imbecil"],
+        ["inutil"],
+        ["tonto"],
+        ["tonta"],
+        ["puto"],
+        ["puta"],
+        ["mierda"],
+        ["baboso"],
+        ["basura"],
+        ["callate"]
+      ],
+      "respuesta": "Entiendo que puedas estar molesto, pero te pido que mantengamos el respeto 🙏🏻. Estoy aquí para ayudarte con tus dudas acerca de la Facultad de Derecho, dime en qué te puedo apoyar."
+    },
+    {
+      "id": "insultos.no_sirves",
+      "categoria": "Insultos",
+      "keywords": [
+        ["no", "sirves"]
+      ],
+      "respuesta": "Lamento que la respuesta no te haya servido. Intenta reformular tu pregunta de forma mas directa o contacta a Control Escolar / Secretaría Académica si es un tema urgente."
+    }
+  ]
+}

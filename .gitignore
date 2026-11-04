@@ -1,2 +1,5 @@
 .env
 .*
+sesion/
+# Preguntas reales de alumnos: no se suben al repo.
+sin_respuesta.jsonl

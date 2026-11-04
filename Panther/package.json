@@ -1,0 +1,16 @@
+{
+  "name": "panther",
+  "version": "1.0.0",
+  "description": "Ito: bot de WhatsApp con dudas frecuentes de la Facultad de Derecho.",
+  "license": "ISC",
+  "type": "commonjs",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "node probar.js"
+  },
+  "dependencies": {
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.34.7"
+  }
+}
