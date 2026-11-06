@@ -493,3 +493,20 @@ a:focus-visible, button:focus-visible{
 @media (prefers-reduced-motion: reduce){
   *{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
+
+/* ==========================================================================
+   PÁGINA CONTINUA: todas las secciones visibles, nav fija
+   ========================================================================== */
+html{ scroll-behavior: smooth; }
+.statusbar:not(.bottom){ position: sticky; top: 0; z-index: 50; }
+.layout{ align-items: flex-start; }
+.sidenav{ position: sticky; top: 55px; height: calc(100vh - 55px); }
+.panel, .panel.active{ display: block; animation: none; scroll-margin-top: 80px; margin-bottom: 34px; }
+.panel:last-child{ margin-bottom: 0; }
+@media (max-width: 860px){
+  .layout{ align-items: stretch; }
+  .stage{ width: 100%; }
+  .sidenav{ top: 55px; height: auto; z-index: 40; }
+  .panel, .panel.active{ scroll-margin-top: 130px; }
+}
+@media (prefers-reduced-motion: reduce){ html{ scroll-behavior: auto; } }

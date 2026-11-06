@@ -94,21 +94,23 @@ function startClock() {
 const navItems = document.querySelectorAll(".nav-item");
 const panels = document.querySelectorAll(".panel");
 
+// Página continua: todas las secciones están visibles una debajo de otra.
+// La barra lateral hace scroll a cada sección y se ilumina según dónde estás.
 function activatePanel(targetId) {
-  panels.forEach((p) => p.classList.toggle("active", p.id === targetId));
-  navItems.forEach((n) => n.classList.toggle("active", n.dataset.target === targetId));
   const panel = document.getElementById(targetId);
-  if (panel) {
-    animateSkillsIn(panel);
-  }
-  window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+  if (panel) panel.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+}
+
+function setActiveNav(targetId) {
+  navItems.forEach((n) => n.classList.toggle("active", n.dataset.target === targetId));
+  const active = document.querySelector('.nav-item[data-target="' + targetId + '"]');
+  if (active && window.innerWidth <= 860) active.scrollIntoView({ inline: "center", block: "nearest" });
 }
 
 navItems.forEach((btn) => {
   btn.addEventListener("click", () => activatePanel(btn.dataset.target));
 });
 
-// enlaces internos (ej. botón "ABRIR_CANAL_COMMS" en el hero)
 document.querySelectorAll(".nav-link").forEach((link) => {
   link.addEventListener("click", (e) => {
     const targetId = link.getAttribute("href").replace("#", "");
@@ -118,6 +120,22 @@ document.querySelectorAll(".nav-link").forEach((link) => {
     }
   });
 });
+
+function updateActiveFromScroll() {
+  const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+  if (atBottom) { setActiveNav("panel-contacto"); return; }
+  const line = window.innerHeight * 0.35;
+  let current = panels[0].id;
+  panels.forEach((p) => { if (p.getBoundingClientRect().top <= line) current = p.id; });
+  setActiveNav(current);
+}
+window.addEventListener("scroll", updateActiveFromScroll, { passive: true });
+
+// barras de lenguajes: se animan cuando la sección entra en pantalla
+const skillObserver = new IntersectionObserver((entries) => {
+  entries.forEach((en) => { if (en.isIntersecting) animateSkillsIn(en.target); });
+}, { threshold: 0.2 });
+panels.forEach((p) => skillObserver.observe(p));
 
 /* ---------- 4. BARRA DE SYNC RATIO (decorativa) ---------- */
 
