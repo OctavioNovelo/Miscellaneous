@@ -1,171 +1,155 @@
-# Bot de WhatsApp para registro de votos en Excel
+# Bot de WhatsApp para conteo de votos en Excel
 
-Recibe mensajes de WhatsApp con este formato exacto (5 líneas):
+Un grupo de WhatsApp recibe los votos. El bot corre en tu número, lee los mensajes
+del grupo, registra cada voto en `data/Padron.xlsx` y avisa a Telegram cuando algo
+necesita revisión.
+
+## 1. Formato del voto
+
+Cada voto empieza con la palabra **VOTO**. Cualquier otro mensaje del grupo se
+ignora en silencio.
 
 ```
-Nombre
-Seccion
-Grado
-Voto
-Operador
-```
-
-Ejemplo:
-```
+VOTO
 Octavio Augusto Novelo Martinez
 A
 Segundo
-Alex
-Braulio
+Tomas
 ```
 
-`Grado` acepta variantes razonables: "Primero"/"Primer"/"1", "Segundo"/"2",
-"Tercero"/"Tercer"/"3", "Cuarto"/"4", "Quinto"/"5" (mayúsculas/minúsculas y
-acentos no importan). Determina en cuál **hoja** del Excel se busca a la
-persona (`Primer año`, `Segundo año`, `Tercer año`, etc.).
+| Línea | Qué es |
+|---|---|
+| `VOTO` | Obligatorio. Marca el mensaje como voto. |
+| Nombre | Nombre completo tal como está en el padrón. Puedes poner varios, uno por línea (misma Sección y Grado). |
+| Sección | `A` a `G`. |
+| Grado | `Primero`/`Primer`/`1`, `Segundo`/`2`, `Tercero`/`Tercer`/`3`, `Cuarto`/`4`, `Quinto`/`5` (no importan mayúsculas ni acentos). |
+| Voto | `Tomas`, `Alex` o `Indeciso`. **Opcional**: si se omite, cuenta como Alex. |
 
-Y actualiza el archivo `data/Padron.xlsx`, marcando la fila en verde y colocando un `1`
-en la columna del voto correspondiente (Tomas / Alex / Indeciso).
+También funciona en una sola línea: `VOTO: Juan Perez C Segundo`.
 
-## 1. Instalación
+### Quién puede votar
+
+- Cualquier **participante del grupo** de votación.
+- El **número del bot** (el tuyo) también cuenta sus votos.
+- El bot solo mira el grupo indicado en `VOTACION_GRUPO_ID`. Los votos mandados por otro chat se ignoran.
+
+## 2. Instalación
 
 ```bash
-cd whatsapp-voto-bot
+cd Papu_Conteo
 npm install
 cp .env.example .env
 ```
 
-Edita `.env` con:
-- `TELEGRAM_BOT_TOKEN`: token que te da @BotFather al crear el bot.
-- `TELEGRAM_CHAT_ID`: el chat/grupo/canal al que se enviarán las alertas
-  (puedes obtenerlo hablándole a @userinfobot o revisando `getUpdates` de tu bot).
-- `EXCEL_PATH`: ruta al Excel (por defecto `./data/Padron.xlsx`, ya incluido y
-  convertido desde tu CSV `LISTAS_A_X_D_Segundo_año_.csv`).
+Edita `.env`:
 
-## 2. Ejecutar
+- `VOTACION_GRUPO_ID`: id del grupo de votación (termina en `@g.us`). **Obligatorio**:
+  sin él el bot no arranca.
+- `TELEGRAM_BOT_TOKEN` y `TELEGRAM_CHAT_ID`: para las alertas (opcional, sin ellos
+  las alertas solo aparecen en consola).
+- `EXCEL_PATH`: ruta al padrón (por defecto `./data/Padron.xlsx`).
+- `SECCIONES_VALIDAS`: por defecto `A,B,C,D,E,F,G`.
+
+El padrón no viene en git (contiene datos personales). Copia tu `Padron.xlsx` a `data/`.
+
+## 3. Ejecutar
 
 ```bash
 npm start
 ```
 
-La primera vez se mostrará un código QR en la terminal: escanéalo desde
-WhatsApp → **Dispositivos vinculados**. La sesión se guarda localmente
-(carpeta `.wwebjs_auth`), así que no tendrás que volver a escanear en cada
-reinicio.
+La primera vez aparece un código QR en la terminal: escanéalo desde WhatsApp →
+**Dispositivos vinculados**. La sesión queda en `.wwebjs_auth/`.
 
-## 3. Lógica de negocio implementada
+Pruebas:
 
-### Búsqueda (prioridad Grado → Sección → Nombre → Operador)
-1. Se resuelve el **Grado** a una hoja del Excel (`Primer año`, `Segundo
-   año`, `Tercer año`, ...). Si el grado no coincide con ninguna hoja
-   existente, se avisa por Telegram como "grado no encontrado" y no se
-   modifica nada.
-2. Dentro de esa hoja, se filtran las filas por **Sección** (coincidencia
-   exacta, A-G).
-3. Dentro de esa sección se busca el mejor **Nombre** por similitud (tolera
-   acentos, mayúsculas/minúsculas, orden de palabras y errores de tipeo
-   leves — distancia de Levenshtein). Los nombres se muestran siempre
-   normalizados en Título Case en las respuestas y notificaciones, sin
-   importar cómo estén capturados en el Excel original.
-4. Si hay dos nombres casi idénticos (empate), se usa el **Operador** para
-   desempatar, comparando contra la columna "Operador Asignado" ya existente
-   en tu padrón. Si sigue sin poder decidirse, se registra en la fila con
-   mayor puntaje pero se avisa por Telegram como "coincidencia ambigua" para
-   verificación manual.
-
-### Registro del voto
-- Si la fila **no** está marcada como confirmada (columna `Confirmado = NO`):
-  se pone `1` en la columna de voto (Tomas/Alex/Indeciso), se llena
-  `Confirmado = SI`, `Operador Confirmó`, fecha/hora, y **se pinta la fila de verde**.
-- Si la fila **ya** está confirmada:
-  - Mismo operador reportando de nuevo → se ignora (mensaje duplicado), no se
-    toca el archivo.
-  - Operador distinto → se revisan discrepancias (voto distinto, nombre
-    distinto, etc.), se **pinta la fila de naranja** y se agrega el detalle en
-    la columna "Discrepancia". **El voto original nunca se borra ni se
-    sobreescribe** — sigue contando. Se envía un mensaje a Telegram con el
-    número de fila y los parámetros que no coinciden.
-
-> Nota de diseño: en vez de usar solo el color de la celda como "memoria" del
-> sistema (frágil si alguien abre el Excel y cambia colores a mano), se agregó
-> una columna `Confirmado` (SI/NO) que es la fuente de verdad real. El color
-> verde/naranja es solo la capa visual que pediste, pero la lógica no depende
-> de leer colores del archivo.
-
-### Respuestas en WhatsApp vs. Telegram
-Para no saturar al operador con mensajes, WhatsApp **solo responde** en dos casos:
-- ✅ Voto registrado correctamente.
-- ❌ Formato del mensaje inválido (para que el operador pueda corregir y reenviar).
-
-Todo lo demás (duplicado ignorado, discrepancia entre operadores, nombre no
-encontrado, sección inexistente, coincidencia ambigua) se queda **en silencio
-en WhatsApp** y se reporta únicamente a **Telegram**, donde quien supervisa
-puede revisar y actuar.
-
-### Notificaciones a Telegram
-Se envían automáticamente en estos casos:
-- Discrepancia entre operadores.
-- Nombre no encontrado en la sección indicada.
-- Sección inexistente.
-- Coincidencia ambigua entre dos nombres parecidos.
-- Mensaje con formato inválido (si parece un intento de reporte de voto).
-
-## 4. Estructura del Excel (una hoja por grado)
-
-`data/Padron.xlsx` trae hoy 3 hojas, tomadas de tu archivo original
-`LISTAS_A_X_D.xlsx`: `Primer año`, `Segundo año`, `Tercer año`. Todas
-comparten exactamente las mismas columnas. Si más adelante agregas hojas
-para `Cuarto año` o `Quinto año` con ese layout, el bot ya sabe reconocerlas
-(no requiere cambios de código, solo que la hoja exista con ese nombre).
-
-## 5. Estructura del proyecto
-
-```
-whatsapp-voto-bot/
-├── data/
-│   └── Padron.xlsx          ← tu Excel convertido, con columnas de control agregadas
-├── src/
-│   ├── index.js             ← arranca whatsapp-web.js y conecta todo
-│   ├── excelManager.js       ← lee/escribe el Excel, aplica colores, detecta discrepancias
-│   ├── matcher.js            ← normalización de texto y similitud de nombres
-│   ├── messageParser.js       ← valida el formato de 4 líneas
-│   └── telegramNotifier.js    ← envío de alertas a Telegram
-├── .env.example
-└── package.json
+```bash
+npm test
 ```
 
-## 6. Columnas nuevas agregadas al Excel
+## 4. Qué pasa con cada voto
+
+### Búsqueda
+1. El **Grado** elige la hoja (`Primer año`, `Segundo año`, …). Si no existe, no se registra nada.
+2. Se filtran las filas por **Sección**.
+3. Se busca el **Nombre** más parecido (tolera acentos, mayúsculas, orden de palabras y errores leves).
+4. Si dos nombres empatan, se desempata con la columna **Operador Asignado**. Si sigue ambiguo, se usa la fila de mayor puntaje y se avisa por Telegram.
+
+**El bot nunca agrega personas nuevas.** Si el nombre, la sección o el grado no existen,
+no toca el Excel y avisa por Telegram.
+
+### Registro
+- Persona **sin confirmar**: se marca el voto, `Confirmado = SI`, se guarda operador y fecha, y la fila se pinta de verde.
+- Persona **ya confirmada** con el **mismo voto**: se ignora (duplicado) y Telegram lo registra como aviso.
+- Persona **ya confirmada** con **voto distinto**: la fila se pinta de naranja y se agrega una nota en `Discrepancia`. **El voto original nunca se borra**; Telegram avisa.
+
+Cada guardado se hace de forma atómica (archivo temporal + renombrado) y en serie, así
+que dos votos casi simultáneos no corrompen el Excel. Si un guardado falla, el bot
+recarga el archivo del disco para no quedar con votos que no se escribieron, y avisa
+por Telegram con los nombres pendientes.
+
+Antes de registrar cada voto, el bot compara la fecha del archivo con la de su último
+guardado. Si cambió (alguien lo editó a mano), recarga del disco y registra sobre esa
+versión, así que no pisa la edición. Aun así, lo más seguro es detener el bot antes de editar.
+
+Al arrancar, el bot copia el padrón a `data/Padron.backup-<fecha-hora>.xlsx`.
+
+### Respuestas
+- En el grupo, el bot responde **citando el mensaje** cuando hay algo que decir: lo registrado, lo no registrado con el motivo, o el formato inválido.
+- Telegram recibe además el detalle de discrepancias, duplicados, nombres no encontrados, ambigüedades y fallos de guardado.
+- **Regla para operadores:** si el bot no responde, el voto no contó; reenviarlo. Sin negritas (`*VOTO*` se ignora) y sin editar el mensaje (una edición no se procesa).
+
+### Alertas a Telegram
+- Discrepancia entre votos.
+- Nombre no encontrado.
+- Sección o grado inexistentes.
+- Coincidencia ambigua (se registra la mejor coincidencia y se avisa).
+- Formato inválido.
+- Fallo de guardado (con operador y nombres pendientes).
+- Desconexión o fallo de autenticación de WhatsApp, y al reconectar (con la hora, para revisar votos enviados durante una caída).
+
+## 5. Estructura del Excel
+
+`data/Padron.xlsx` tiene una hoja por grado: `Primer año`, `Segundo año`, `Tercer año`,
+`Cuarto año`, `Quinto año`, y `Revisar_Manual` (no se usa para votos).
+Todas las hojas de grado comparten columnas:
 
 | Columna | Uso |
 |---|---|
-| `Confirmado` | `SI`/`NO` — si el voto de esa persona ya fue contabilizado |
-| `Voto Confirmado` | Tomas / Alex / Indeciso |
-| `Operador Confirmó` | quién hizo el primer reporte válido |
-| `Fecha Hora` | cuándo se registró el voto |
-| `Discrepancia` | historial de discrepancias detectadas (no borra el voto) |
+| `Seccion`, `Nombre`, `Telefono` | Datos del padrón |
+| `Tomas`, `Alex`, `Indeciso` | Marca `1` en la columna del voto |
+| `Operador Asignado` | Para desempatar nombres parecidos |
+| `Confirmado` | `SI`/`NO`: fuente de verdad de si el voto ya se contó |
+| `Voto Confirmado` | `Tomas` / `Alex` / `Indeciso` |
+| `Operador Confirmo` | Quién registró el primer voto válido |
+| `Fecha/Hora` | Cuándo se registró |
+| `Discrepancia` | Historial de discrepancias (no borra el voto) |
 
-## 7. Sobre el dashboard estilo MAGI (Evangelion)
+Al arrancar, las personas precargadas como Tomas o Indeciso se marcan como confirmadas
+(precarga inicial). Es idempotente.
 
-Es totalmente viable como siguiente fase: se puede exportar el estado del
-Excel a JSON y montar un dashboard web (3 paneles estilo MAGI — por ejemplo
-Tomas / Alex / Indecisos — con la tipografía monoespaciada, fondo negro y
-acentos naranja/verde característicos, y actualización en vivo vía
-WebSockets cada vez que `excelManager` guarda cambios). No se incluye en esta
-entrega para mantener el bot central simple y estable primero; una vez que
-el flujo de WhatsApp + Excel + Telegram esté probado en campo, se puede
-construir el dashboard leyendo el mismo archivo (o migrando a una base de
-datos ligera tipo SQLite si el volumen de mensajes es alto y quieres tiempo
-real fino).
+## 6. Dashboard MAGI
 
-## 8. Limitaciones a tener en cuenta
+`magi-dashboard/` muestra el conteo en vivo leyendo el mismo `Padron.xlsx`.
 
-- `whatsapp-web.js` requiere que el número usado quede vinculado como
-  "dispositivo" de un WhatsApp normal; no es la API oficial de Meta, así que
-  úsalo con un número dedicado y ten cuidado con los límites de WhatsApp
-  ante envío/recepción masiva.
-- Las escrituras al Excel están serializadas (una a la vez) para evitar
-  corrupción si llegan varios mensajes casi simultáneos, pero con **muchos**
-  operadores reportando en paralelo, migrar a una base de datos real
-  (SQLite/Postgres) escalará mejor que un único archivo `.xlsx`.
+```bash
+cd magi-dashboard
+npm install
+npm start
+```
 
+Abre `http://127.0.0.1:4141`. Solo escucha en local.
 
+Si el padrón está en otro lugar, crea `magi-dashboard/.env` con
+`DASHBOARD_EXCEL_PATH=/ruta/al/Padron.xlsx`. Las rutas relativas se resuelven desde
+la carpeta `magi-dashboard/`.
+
+## 7. Limitaciones
+
+- `whatsapp-web.js` no es la API oficial de WhatsApp. Usa un número dedicado y ten
+  cuidado con los límites de envío.
+- Todo el conteo vive en un solo `.xlsx`. Con muchos operadores en paralelo, una base de
+  datos (SQLite/Postgres) escala mejor.
+- La identidad del votante es su contacto de WhatsApp (nombre que muestra), no un número
+  verificado contra una lista. Si necesitas que solo voten números concretos, hay que
+  agregar una lista de números autorizados.

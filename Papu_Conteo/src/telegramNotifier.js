@@ -2,6 +2,14 @@
 
 const TelegramBot = require('node-telegram-bot-api');
 
+/** Telegram usa parse_mode HTML: todo dato que viene de WhatsApp debe escaparse o el envío falla. */
+function esc(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 class TelegramNotifier {
   constructor(token, chatId) {
     this.enabled = Boolean(token && chatId);
@@ -28,58 +36,76 @@ class TelegramNotifier {
 
   notifyDiscrepancia(result) {
     const msg =
-      `⚠️ <b>DISCREPANCIA</b> — ${result.grado} | Fila ${result.rowNumber} (Sección ${result.seccion})\n` +
-      `Nombre en padrón: ${result.nombreEnPadron}\n` +
-      `Voto ya contado: <b>${result.votoPrevio}</b> (operador: ${result.operadorPrevio})\n` +
-      `Nuevo reporte: <b>${result.voto}</b> (operador: ${result.operador})\n` +
-      `Parámetros que discrepan:\n- ${result.discrepancias.join('\n- ')}\n` +
+      `⚠️ <b>DISCREPANCIA</b> — ${esc(result.grado)} | Fila ${result.rowNumber} (Sección ${esc(result.seccion)})\n` +
+      `Nombre en padrón: ${esc(result.nombreEnPadron)}\n` +
+      `Voto ya contado: <b>${esc(result.votoPrevio)}</b> (operador: ${esc(result.operadorPrevio)})\n` +
+      `Nuevo reporte: <b>${esc(result.voto)}</b> (operador: ${esc(result.operador)})\n` +
+      `Parámetros que discrepan:\n- ${result.discrepancias.map(esc).join('\n- ')}\n` +
       `El voto original se mantiene contado.`;
     return this.send(msg);
   }
 
   notifyDuplicado(result) {
     const msg =
-      `🔁 <b>VOTO DUPLICADO (ignorado)</b> — ${result.grado} | Fila ${result.rowNumber} (Sección ${result.seccion})\n` +
-      `Nombre en padrón: ${result.nombreEnPadron}\n` +
-      `Voto ya contado: <b>${result.votoPrevio}</b> (operador original: ${result.operadorPrevio || 'precarga inicial'})\n` +
-      `Nuevo reporte: mismo voto <b>${result.voto}</b> (operador: ${result.operador})\n` +
+      `🔁 <b>VOTO DUPLICADO (ignorado)</b> — ${esc(result.grado)} | Fila ${result.rowNumber} (Sección ${esc(result.seccion)})\n` +
+      `Nombre en padrón: ${esc(result.nombreEnPadron)}\n` +
+      `Voto ya contado: <b>${esc(result.votoPrevio)}</b> (operador original: ${esc(result.operadorPrevio || 'precarga inicial')})\n` +
+      `Nuevo reporte: mismo voto <b>${esc(result.voto)}</b> (operador: ${esc(result.operador)})\n` +
       `No se modificó nada, es solo un aviso informativo.`;
     return this.send(msg);
   }
 
-  notifyNoEncontrado(result, operadorEnMensaje) {
+  notifyNoEncontrado(result) {
     const msg =
-      `❌ <b>NO ENCONTRADO</b>\n` +
-      `Nombre: ${result.nombre}\n` +
-      `Grado: ${result.grado} | Sección: ${result.seccion}\n` +
-      `Operador que reportó: ${operadorEnMensaje}\n` +
+      `❌ <b>NOMBRE NO ENCONTRADO</b> (no se registró nada)\n` +
+      `Nombre: ${esc(result.nombre)}\n` +
+      `Grado: ${esc(result.grado)} | Sección: ${esc(result.seccion)} | Hoja: ${esc(result.hoja)}\n` +
+      `Operador que reportó: ${esc(result.operador)}\n` +
       `Revisar manualmente en el padrón.`;
     return this.send(msg);
   }
 
   notifySeccionNoEncontrada(result) {
-    const msg = `❌ <b>SECCIÓN NO ENCONTRADA</b>: "${result.seccion}" no existe en la hoja "${result.hoja}".`;
+    const msg = `❌ <b>SECCIÓN NO ENCONTRADA</b>: "${esc(result.seccion)}" no existe en la hoja "${esc(result.hoja)}". No se registró nada.`;
     return this.send(msg);
   }
 
   notifyGradoNoEncontrado(result) {
     const msg =
-      `❌ <b>GRADO NO ENCONTRADO</b>: "${result.grado}" no coincide con ninguna hoja del padrón ` +
-      `(válidos: Primero, Segundo, Tercero, Cuarto, Quinto).`;
+      `❌ <b>GRADO NO ENCONTRADO</b>: "${esc(result.grado)}" no coincide con ninguna hoja del padrón ` +
+      `(válidos: Primero, Segundo, Tercero, Cuarto, Quinto). No se registró nada.`;
     return this.send(msg);
   }
 
   notifyAmbiguo(result) {
     const msg =
-      `❓ <b>COINCIDENCIA AMBIGUA</b> — ${result.grado} | Fila usada: ${result.rowNumber} (Sección ${result.seccion})\n` +
-      `Se encontraron varios nombres muy parecidos: ${result.candidatosAmbiguos.join(' | ')}\n` +
+      `❓ <b>COINCIDENCIA AMBIGUA</b> — ${esc(result.grado)} | Fila usada: ${result.rowNumber} (Sección ${esc(result.seccion)})\n` +
+      `Se encontraron varios nombres muy parecidos: ${result.candidatosAmbiguos.map(esc).join(' | ')}\n` +
       `Verificar manualmente que la fila ${result.rowNumber} sea la persona correcta.`;
     return this.send(msg);
   }
 
   notifyFormatoInvalido(error, from) {
-    const msg = `⚠️ <b>MENSAJE CON FORMATO INVÁLIDO</b>\nDe: ${from}\n${error}`;
+    const msg = `⚠️ <b>MENSAJE CON FORMATO INVÁLIDO</b>\nDe: ${esc(from)}\n${esc(error)}`;
     return this.send(msg);
+  }
+
+  notifyFalloGuardado({ operador, nombres, error }) {
+    const msg =
+      `💾 <b>NO SE PUDO GUARDAR</b>\n` +
+      `Operador: ${esc(operador)}\n` +
+      `Pendientes (no registrados): ${nombres.map(esc).join(' | ')}\n` +
+      `Error: ${esc(error)}\n` +
+      `El padrón se recargó desde disco. Pedir al operador que reenvíe.`;
+    return this.send(msg);
+  }
+
+  notifyRecargaFallida() {
+    return this.send(`⚠️ <b>PADRÓN</b>: no se pudo recargar el Excel tras un fallo de guardado. Revisar el archivo antes de seguir.`);
+  }
+
+  notifyConexion(texto) {
+    return this.send(`🔌 <b>WHATSAPP</b>: ${esc(texto)}`);
   }
 }
 

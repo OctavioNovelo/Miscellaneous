@@ -10,6 +10,15 @@ const COLORS = {
 
 let lastActivityKey = null;
 
+// Los nombres y operadores vienen de WhatsApp: se escapan antes de pasarlos a innerHTML.
+function esc(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 // --- Reloj ---
 function tickClock() {
   document.getElementById('clock').textContent = new Date().toLocaleTimeString('es-MX', { hour12: false });
@@ -88,7 +97,7 @@ function renderMagiUnits(grados) {
       <div class="magi-unit" id="magi-${i}">
         <div class="magi-hex">${g.magi.split('-')[0]}</div>
         <div class="magi-name">${g.magi}</div>
-        <div class="magi-sub">${g.hoja.toUpperCase()}</div>
+        <div class="magi-sub">${esc(g.hoja.toUpperCase())}</div>
         <div class="magi-stats">
           <div>CONF<span id="magi-${i}-conf">0</span></div>
           <div>TOTAL<span id="magi-${i}-total">0</span></div>
@@ -206,7 +215,7 @@ function renderBarChart(grados) {
       return `
         <div class="grado-bar-row">
           <div class="grado-bar-toprow">
-            <span class="grado-bar-label">${g.hoja}</span>
+            <span class="grado-bar-label">${esc(g.hoja)}</span>
             <span class="grado-bar-total">${total} voto(s) confirmado(s)</span>
           </div>
           <div class="grado-bar-track">
@@ -230,7 +239,7 @@ function renderAlerts(grados) {
 
   list.innerHTML = grados
     .filter((g) => g.discrepancias > 0)
-    .map((g) => `<div class="alert-item">⚠ ${g.hoja}: ${g.discrepancias} discrepancia(s) pendiente(s) de revisión.</div>`)
+    .map((g) => `<div class="alert-item">⚠ ${esc(g.hoja)}: ${g.discrepancias} discrepancia(s) pendiente(s) de revisión.</div>`)
     .join('');
 }
 
@@ -247,10 +256,10 @@ function renderActivity(actividad) {
 
   list.innerHTML = actividad
     .map((a, i) => {
-      const voteClass = `activity-voto-${a.voto.toLowerCase()}`;
+      const voteClass = `activity-voto-${esc(a.voto.toLowerCase())}`;
       const hora = new Date(a.fecha).toLocaleTimeString('es-MX', { hour12: false });
       const flash = !isFirstRender && i === 0 && newestKey !== lastActivityKey ? 'new-flash' : '';
-      return `<div class="activity-item ${flash}">[${hora}] <strong>${a.nombre}</strong> — ${a.hoja} Sec.${a.seccion} → <span class="${voteClass}">${a.voto}</span> (op. ${a.operador || '—'})</div>`;
+      return `<div class="activity-item ${flash}">[${hora}] <strong>${esc(a.nombre)}</strong> — ${esc(a.hoja)} Sec.${esc(a.seccion)} → <span class="${voteClass}">${esc(a.voto)}</span> (op. ${esc(a.operador) || '—'})</div>`;
     })
     .join('');
 

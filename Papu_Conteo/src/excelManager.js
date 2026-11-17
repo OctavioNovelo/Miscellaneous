@@ -1,5 +1,6 @@
 'use strict';
 
+const fs = require('fs');
 const ExcelJS = require('exceljs');
 const { findBestMatch, normalize } = require('./matcher');
 
@@ -60,18 +61,45 @@ class ExcelManager {
     this._queue = Promise.resolve();
   }
 
+  /** Carga el padrón. Solo reemplaza el workbook si la lectura sale bien. */
   async load() {
-    this.workbook = new ExcelJS.Workbook();
-    await this.workbook.xlsx.readFile(this.filePath);
-    if (this.workbook.worksheets.length === 0) {
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.readFile(this.filePath);
+    if (workbook.worksheets.length === 0) {
       throw new Error(`El archivo ${this.filePath} no tiene hojas.`);
+    }
+    this.workbook = workbook;
+    this.mtimeMs = fs.statSync(this.filePath).mtimeMs;
+  }
+
+  /** Recarga desde disco si el archivo cambió desde la última carga o guardado (edición manual). */
+  async recargarSiCambio() {
+    if (fs.statSync(this.filePath).mtimeMs === this.mtimeMs) return false;
+    console.warn('[Excel] El archivo cambió en disco; se recarga antes de registrar el voto.');
+    await this.load();
+    return true;
+  }
+
+  /** Tras un fallo de guardado: vuelve a leer el disco. Devuelve false si no se pudo; nunca lanza. */
+  async recuperar() {
+    try {
+      await this.load();
+      return true;
+    } catch (err) {
+      console.error('[Excel] No se pudo recargar el padrón:', err.message);
+      return false;
     }
   }
 
+  /** Escribe a un temporal y lo renombra: el dashboard nunca lee un archivo a medio escribir. */
   async save() {
-    await this.workbook.xlsx.writeFile(this.filePath);
+    const tmp = `${this.filePath}.tmp`;
+    await this.workbook.xlsx.writeFile(tmp);
+    await fs.promises.rename(tmp, this.filePath);
+    this.mtimeMs = fs.statSync(this.filePath).mtimeMs;
   }
 
+  /** Serializa operaciones sobre el workbook (procesar voto + guardar van juntos). */
   async runExclusive(fn) {
     const result = this._queue.then(() => fn());
     this._queue = result.catch(() => {});
@@ -161,86 +189,59 @@ class ExcelManager {
     return migradas;
   }
 
+  /**
+   * Registra un voto para una persona que ya existe en el padrón.
+   * Nunca agrega filas: si la persona, la sección o el grado no existen, devuelve
+   * NOMBRE_NO_ENCONTRADO / SECCION_NO_ENCONTRADA / GRADO_NO_ENCONTRADO sin tocar el Excel.
+   */
   processVote({ nombre, seccion, grado, voto, operador }) {
-    let sheet = this._resolveSheet(grado);
-    let candidatos = [];
+    const seccionUp = seccion ? seccion.toUpperCase() : '';
+    const voteLabel = this._voteLabelForColumn(this._voteColumnFor(voto));
+    const base = {
+      nombre,
+      grado: grado || '(sin grado)',
+      seccion: seccionUp || 'N/A',
+      operador,
+      voto: voteLabel,
+    };
 
-    if (sheet) {
-      candidatos = this._candidatesForSeccion(sheet, seccion);
-    } else {
-      // Buscar en las hojas si no se especificó grado
-      for (const s of this.workbook.worksheets) {
-        if (s.name === 'Revisar_Manual') continue;
-        const c = this._candidatesForSeccion(s, seccion);
-        if (c.length > 0) {
-          const matchResult = findBestMatch(c, nombre, operador);
-          if (matchResult.best) {
-            sheet = s;
-            candidatos = c;
-            break;
-          }
-        }
+    const sheet = this._resolveSheet(grado);
+    if (grado && !sheet) {
+      return { ...base, status: 'GRADO_NO_ENCONTRADO', hoja: null };
+    }
+    const hojas = sheet ? [sheet] : this.workbook.worksheets.filter((s) => s.name !== 'Revisar_Manual');
+
+    let seccionExiste = false;
+    let target = null;
+    let match = null;
+    for (const hoja of hojas) {
+      const candidatos = this._candidatesForSeccion(hoja, seccion);
+      if (candidatos.length > 0) seccionExiste = true;
+      const m = findBestMatch(candidatos, nombre, operador);
+      if (m.best) {
+        target = hoja;
+        match = { ...m, candidatos };
+        break;
       }
     }
 
-    const { best, score, ambiguous, ties } = candidatos.length > 0
-      ? findBestMatch(candidatos, nombre, operador)
-      : { best: null, score: 0, ambiguous: false, ties: [] };
-
-    const targetSheet = sheet || this.workbook.worksheets[0];
-
-    // SI NO APARECE EN EL EXCEL: Agregarlo en la celda/fila siguiente de la tabla
-    if (!best) {
-      const newRowNumber = targetSheet.lastRow ? targetSheet.lastRow.number + 1 : 2;
-      const row = targetSheet.getRow(newRowNumber);
-
-      const voteCol = this._voteColumnFor(voto);
-      const voteLabel = this._voteLabelForColumn(voteCol);
-      const now = new Date();
-
-      row.getCell(COL.SECCION).value = seccion ? seccion.toUpperCase() : '';
-      row.getCell(COL.NOMBRE).value = normalizeDisplayName(nombre);
-      row.getCell(COL.TOMAS).value = voteCol === COL.TOMAS ? 1 : null;
-      row.getCell(COL.ALEX).value = voteCol === COL.ALEX ? 1 : null;
-      row.getCell(COL.INDECISO).value = voteCol === COL.INDECISO ? 1 : null;
-
-      row.getCell(COL.CONFIRMADO).value = 'SI';
-      row.getCell(COL.VOTO_CONFIRMADO).value = voteLabel;
-      row.getCell(COL.OPERADOR_CONFIRMO).value = operador;
-      const fechaCell = row.getCell(COL.FECHA_HORA);
-      fechaCell.value = now;
-      this._setCellStyle(fechaCell, { numFmt: 'dd/mm/yyyy hh:mm' });
-
-      this.applyRowFill(targetSheet, newRowNumber, GREEN_FILL);
-      row.commit();
-
-      return {
-        hoja: targetSheet.name,
-        grado: targetSheet.name,
-        rowNumber: newRowNumber,
-        nombreEnPadron: normalizeDisplayName(nombre),
-        seccion: seccion ? seccion.toUpperCase() : 'N/A',
-        matchScore: 1,
-        ambiguous: false,
-        candidatosAmbiguos: [],
-        status: 'REGISTRADO',
-        voto: voteLabel,
-        operador,
-      };
+    if (!match) {
+      const status = seccionUp && !seccionExiste ? 'SECCION_NO_ENCONTRADA' : 'NOMBRE_NO_ENCONTRADO';
+      return { ...base, status, hoja: sheet ? sheet.name : 'todas las hojas' };
     }
 
-    const row = targetSheet.getRow(best.rowNumber);
+    const { best, score, ambiguous, ties } = match;
+    const row = target.getRow(best.rowNumber);
     const yaConfirmado = normalize(row.getCell(COL.CONFIRMADO).value) === 'SI';
     const voteCol = this._voteColumnFor(voto);
-    const voteLabel = this._voteLabelForColumn(voteCol);
     const now = new Date();
 
-    const base = {
-      hoja: targetSheet.name,
-      grado: targetSheet.name,
+    const datos = {
+      ...base,
+      hoja: target.name,
+      grado: target.name,
       rowNumber: best.rowNumber,
       nombreEnPadron: best.nombre,
-      seccion: seccion ? seccion.toUpperCase() : 'N/A',
       matchScore: Number(score.toFixed(2)),
       ambiguous,
       candidatosAmbiguos: ambiguous ? ties.map((t) => t.candidato.nombre) : [],
@@ -258,24 +259,17 @@ class ExcelManager {
       fechaCell.value = now;
       this._setCellStyle(fechaCell, { numFmt: 'dd/mm/yyyy hh:mm' });
 
-      this.applyRowFill(targetSheet, best.rowNumber, GREEN_FILL);
+      this.applyRowFill(target, best.rowNumber, GREEN_FILL);
       row.commit();
 
-      return { ...base, status: 'REGISTRADO', voto: voteLabel, operador };
+      return { ...datos, status: 'REGISTRADO' };
     }
 
     const operadorPrevio = row.getCell(COL.OPERADOR_CONFIRMO).value || '';
     const votoPrevio = row.getCell(COL.VOTO_CONFIRMADO).value || '';
 
     if (normalize(votoPrevio) === normalize(voteLabel)) {
-      return {
-        ...base,
-        status: 'DUPLICADO_IGNORADO',
-        voto: voteLabel,
-        votoPrevio,
-        operador,
-        operadorPrevio,
-      };
+      return { ...datos, status: 'DUPLICADO_IGNORADO', votoPrevio, operadorPrevio };
     }
 
     const discrepancias = [
@@ -291,18 +285,10 @@ class ExcelManager {
       ? `${discrepanciaPrevia}\n${nuevaNota}`
       : nuevaNota;
 
-    this.applyRowFill(targetSheet, best.rowNumber, ORANGE_FILL);
+    this.applyRowFill(target, best.rowNumber, ORANGE_FILL);
     row.commit();
 
-    return {
-      ...base,
-      status: 'DISCREPANCIA',
-      voto: voteLabel,
-      votoPrevio,
-      operador,
-      operadorPrevio,
-      discrepancias,
-    };
+    return { ...datos, status: 'DISCREPANCIA', votoPrevio, operadorPrevio, discrepancias };
   }
 }
 

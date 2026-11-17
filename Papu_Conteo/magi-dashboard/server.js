@@ -9,10 +9,9 @@ const { Server } = require('socket.io');
 const ExcelJS = require('exceljs');
 
 // Mismo archivo que usa el bot (data/Padron.xlsx). Puedes overridear con
-// DASHBOARD_EXCEL_PATH en un .env dentro de esta carpeta si vives en otro lado.
-const EXCEL_PATH = path.resolve(
-  process.env.DASHBOARD_EXCEL_PATH || process.env.EXCEL_PATH || '../data/Padron.xlsx'
-);
+// DASHBOARD_EXCEL_PATH en un .env dentro de esta carpeta. Las rutas relativas
+// se resuelven desde esta carpeta, no desde el directorio de trabajo.
+const EXCEL_PATH = path.resolve(__dirname, process.env.DASHBOARD_EXCEL_PATH || '../data/Padron.xlsx');
 const PORT = process.env.DASHBOARD_PORT || 4141;
 
 const COL = {
@@ -54,7 +53,8 @@ async function readStats() {
   let totales = { tomas: 0, alex: 0, indeciso: 0, confirmados: 0, padron: 0, discrepancias: 0, pendientes: 0 };
   let ultimaActualizacion = null;
 
-  wb.worksheets.forEach((sheet, idx) => {
+  // Revisar_Manual no es un grado: no cuenta en el padrón.
+  wb.worksheets.filter((s) => s.name !== 'Revisar_Manual').forEach((sheet, idx) => {
     let tomas = 0, alex = 0, indeciso = 0, confirmados = 0, padron = 0, discrepancias = 0;
     const seccionesSet = new Set();
 
@@ -166,10 +166,14 @@ function scheduleBroadcast() {
   debounceTimer = setTimeout(broadcastStats, 400);
 }
 
+// Se observa el directorio y se filtra el archivo: el bot escribe a un temporal y lo
+// renombra sobre el Excel, y al observar solo el archivo el watcher perdería el inodo.
 chokidar
-  .watch(EXCEL_PATH, { awaitWriteFinish: { stabilityThreshold: 300, pollInterval: 100 } })
-  .on('change', scheduleBroadcast)
-  .on('error', (err) => console.error('[MAGI] Error observando el archivo:', err.message));
+  .watch(path.dirname(EXCEL_PATH), { ignoreInitial: true, depth: 0, awaitWriteFinish: { stabilityThreshold: 300, pollInterval: 100 } })
+  .on('all', (event, file) => {
+    if (path.resolve(file) === EXCEL_PATH && (event === 'add' || event === 'change')) scheduleBroadcast();
+  })
+  .on('error', (err) => console.error('[MAGI] Error observando el directorio:', err.message));
 
 // Respaldo: si por lo que sea el watcher no detecta el cambio, refrescamos
 // cada 10s de todas formas.
@@ -180,7 +184,8 @@ io.on('connection', (socket) => {
   broadcastStats();
 });
 
-server.listen(PORT, () => {
-  console.log(`[MAGI] Sistema de conteo escuchando en http://localhost:${PORT}`);
+// Solo local: el padrón tiene nombres y operadores, no se expone a la red.
+server.listen(PORT, '127.0.0.1', () => {
+  console.log(`[MAGI] Sistema de conteo escuchando en http://127.0.0.1:${PORT}`);
   console.log(`[MAGI] Observando: ${EXCEL_PATH}`);
 });
