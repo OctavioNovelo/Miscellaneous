@@ -6,20 +6,16 @@ const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 const path = require('path');
 
-const { ExcelManager } = require('./excelManager');
+const { ExcelManager, CANDIDATOS } = require('./excelManager');
 const { parseVoteMessage } = require('./messageParser');
 const { TelegramNotifier } = require('./telegramNotifier');
 
 const EXCEL_PATH = path.resolve(process.env.EXCEL_PATH || './data/Padron.xlsx');
-const SECCIONES_VALIDAS = (process.env.SECCIONES_VALIDAS || 'A,B,C,D,E,F,G')
-  .split(',')
-  .map((s) => s.trim().toUpperCase());
 // Id del grupo donde se recogen los votos (termina en @g.us). Sin él el bot no arranca.
 const GRUPO_ID = (process.env.VOTACION_GRUPO_ID || '').trim();
 
 const FORMATO_AYUDA =
-  'Formato:\nVOTO\nNombre completo\nSección\nGrado\nVoto (opcional; si se omite cuenta como Alex)\n\n' +
-  'Varios nombres: uno por línea, misma Sección y Grado.';
+  'Formato (una persona por mensaje):\nVOTO\nNombre completo [grado] [salón]\nPor quién votas (opcional; si se omite cuenta como Aaron)\n\nGrado: Primero, Segundo, Tercero o Cuarto. Salón: una letra (A–G).';
 
 const excelManager = new ExcelManager(EXCEL_PATH);
 const telegram = new TelegramNotifier(process.env.TELEGRAM_BOT_TOKEN, process.env.TELEGRAM_CHAT_ID);
@@ -38,18 +34,6 @@ async function main() {
   fs.copyFileSync(EXCEL_PATH, respaldo);
   console.log(`[Excel] Respaldo creado: ${respaldo}`);
 
-  // Precarga inicial: las intenciones Tomas/Indeciso del padrón cuentan como votos confirmados.
-  // Idempotente: solo toca filas sin confirmar.
-  const migradas = await excelManager.runExclusive(async () => {
-    const n = excelManager.confirmarIntencionesPrecargadas();
-    if (n > 0) await excelManager.save();
-    return n;
-  });
-  if (migradas > 0) {
-    console.log(`[Excel] ${migradas} fila(s) con intención precargada (Tomas/Indeciso) marcadas como CONFIRMADO.`);
-    await telegram.send(`ℹ️ Migración inicial: ${migradas} voto(s) precargado(s) de Tomas/Indeciso se marcaron como confirmados.`);
-  }
-
   const client = new Client({
     authStrategy: new LocalAuth(), // guarda la sesión para no escanear el QR cada vez
     puppeteer: {
@@ -57,7 +41,7 @@ async function main() {
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
       // Si Puppeteer no pudo descargar su propio Chromium, se puede apuntar
       // a uno ya instalado en el sistema definiendo CHROME_PATH en .env
-      // (ej. /usr/bin/chromium-browser o /usr/bin/google-chrome).
+      // (ej. /usr/bin/chromium-browser, /usr/bin/google-chrome o /usr/bin/brave).
       ...(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : {}),
     },
   });
@@ -101,7 +85,7 @@ async function main() {
 async function resolveOperador(message) {
   try {
     const contact = await message.getContact();
-    // Solo el nombre: el desempate compara contra "Operador Asignado" del padrón, que son nombres.
+    // Solo el nombre: el desempate compara contra la columna "Operador" del Excel, que son nombres.
     return contact.pushname || contact.name || contact.number || message.from;
   } catch (err) {
     console.warn('No se pudo resolver el contacto del mensaje, se usa message.from:', err.message);
@@ -117,7 +101,7 @@ async function handleIncomingMessage(message) {
   if (chatId !== GRUPO_ID) return;
 
   // Chat normal del grupo: si no empieza con VOTO, se ignora sin responder.
-  const parsed = parseVoteMessage(message.body || '', SECCIONES_VALIDAS);
+  const parsed = parseVoteMessage(message.body || '');
   if (parsed.ignorar) return;
 
   if (!parsed.ok) {
@@ -126,100 +110,58 @@ async function handleIncomingMessage(message) {
     return;
   }
 
-  const { nombres, seccion, grado, voto } = parsed.data;
+  const { nombre, voto, grado, seccion } = parsed.data;
   const operador = await resolveOperador(message);
 
-  const registrados = [];
-  const noRegistrados = [];
-  // Evita mandar el mismo aviso de Telegram varias veces cuando la Sección o
-  // el Grado del mensaje (compartidos por todos los nombres) no existen.
-  const avisosUnicos = new Set();
-
-  for (let i = 0; i < nombres.length; i++) {
-    const nombre = nombres[i];
-    let result;
-    try {
-      result = await excelManager.runExclusive(async () => {
-        // Si alguien editó el Excel a mano, se recarga antes de registrar: no se pisa su cambio.
-        await excelManager.recargarSiCambio();
-        const r = excelManager.processVote({ nombre, seccion, grado, voto, operador });
-        if (r.status === 'REGISTRADO' || r.status === 'DISCREPANCIA') await excelManager.save();
-        return r;
-      });
-    } catch (err) {
-      // La memoria pudo quedar por delante del disco: se vuelve a leer lo que hay en el archivo.
-      const pendientes = nombres.slice(i);
-      const recuperado = await excelManager.runExclusive(() => excelManager.recuperar());
-      if (!recuperado) await telegram.notifyRecargaFallida();
-      await telegram.notifyFalloGuardado({ operador, nombres: pendientes, error: err.message });
-      noRegistrados.push(...pendientes.map((n) => `${n}: no se pudo guardar; reenvía este nombre`));
-      break;
-    }
-    await procesarResultadoVoto(result, registrados, noRegistrados, avisosUnicos);
+  let result;
+  try {
+    result = await excelManager.runExclusive(async () => {
+      // Si alguien editó el Excel a mano, se recarga antes de registrar: no se pisa su cambio.
+      await excelManager.recargarSiCambio();
+      let r = excelManager.processVote({ nombre, voto, operador, grado, seccion });
+      // Nombre que no está en ningún grado: se anota en la hoja "No encontrados" para revisarlo a mano.
+      if (r.status === 'NOMBRE_NO_ENCONTRADO') r = excelManager.registrarNoEncontrado({ nombre, voto, operador });
+      if (['REGISTRADO', 'DISCREPANCIA', 'ANOTADO_NO_ENCONTRADO'].includes(r.status)) await excelManager.save();
+      return r;
+    });
+  } catch (err) {
+    // La memoria pudo quedar por delante del disco: se vuelve a leer lo que hay en el archivo.
+    const recuperado = await excelManager.runExclusive(() => excelManager.recuperar());
+    if (!recuperado) await telegram.notifyRecargaFallida();
+    await telegram.notifyFalloGuardado({ operador, nombres: [nombre], error: err.message });
+    await message.reply(`⚠️ No se pudo guardar el voto; reenvíalo.`);
+    return;
   }
 
-  // Una sola respuesta citada: lo registrado y lo que no, con el motivo, para que el operador sepa qué reenviar.
-  const partes = [];
-  if (registrados.length > 0) {
-    const detalle = registrados
-      .map((r) => `${r.grado} | Fila ${r.rowNumber} | ${r.nombreEnPadron} | Sección ${r.seccion} | Voto: ${r.voto}`)
-      .join('\n');
-    const encabezado = registrados.length === 1 ? '✅ Voto registrado.' : `✅ ${registrados.length} votos registrados.`;
-    partes.push(`${encabezado}\n${detalle}`);
-  }
-  if (noRegistrados.length > 0) {
-    partes.push(`⚠️ No registrados o para revisión:\n${noRegistrados.map((t) => `- ${t}`).join('\n')}`);
-  }
-  if (partes.length > 0) await message.reply(partes.join('\n\n'));
+  await message.reply(await procesarResultadoVoto(result));
 }
 
-/** Aplica el resultado de un solo nombre: avisa a Telegram y deja constancia para la respuesta del grupo. */
-async function procesarResultadoVoto(result, registrados, noRegistrados, avisosUnicos) {
-  const nombre = result.nombre || result.nombreEnPadron;
+/** Avisa a Telegram cuando corresponde y devuelve el texto de respuesta para el grupo. */
+async function procesarResultadoVoto(result) {
   switch (result.status) {
     case 'REGISTRADO':
-      registrados.push(result);
       // La ambigüedad se resuelve/avisa solo por Telegram.
       if (result.ambiguous) await telegram.notifyAmbiguo(result);
-      break;
+      return `✅ Voto registrado.\n${result.nombreEnPadron} | ${result.grado} | Sección ${result.seccion} | Voto: ${result.voto}`;
 
     case 'DUPLICADO_IGNORADO':
-      noRegistrados.push(`${nombre}: ya estaba registrado con ese mismo voto`);
       await telegram.notifyDuplicado(result);
-      break;
+      return `⚠️ ${result.nombre}: ya estaba registrado con ese mismo voto.`;
 
     case 'DISCREPANCIA':
-      noRegistrados.push(`${nombre}: ya tenía otro voto contado; quedó marcado para revisión`);
       await telegram.notifyDiscrepancia(result);
-      break;
+      return `⚠️ ${result.nombre}: ya tenía otro voto contado; quedó marcado para revisión.`;
 
-    case 'NOMBRE_NO_ENCONTRADO':
-      noRegistrados.push(`${nombre}: no está en el padrón (${result.grado}, sección ${result.seccion})`);
+    case 'ANOTADO_NO_ENCONTRADO':
       await telegram.notifyNoEncontrado(result);
-      break;
+      return `❌ ${result.nombre}: no está en el padrón. Quedó anotado en la hoja "No encontrados" para revisarlo.`;
 
-    case 'SECCION_NO_ENCONTRADA': {
-      noRegistrados.push(`${nombre}: la sección ${result.seccion} no existe en ${result.hoja}`);
-      const key = `SECCION:${result.hoja}:${result.seccion}`;
-      if (!avisosUnicos.has(key)) {
-        avisosUnicos.add(key);
-        await telegram.notifySeccionNoEncontrada(result);
-      }
-      break;
-    }
-
-    case 'GRADO_NO_ENCONTRADO': {
-      noRegistrados.push(`${nombre}: el grado "${result.grado}" no existe`);
-      const key = `GRADO:${result.grado}`;
-      if (!avisosUnicos.has(key)) {
-        avisosUnicos.add(key);
-        await telegram.notifyGradoNoEncontrado(result);
-      }
-      break;
-    }
+    case 'CANDIDATO_NO_VALIDO':
+      return `❌ "${result.voto}" no es una opción. Opciones: ${CANDIDATOS.join(', ')}.`;
 
     default:
       console.warn('Estado desconocido:', result);
+      return '⚠️ No se pudo procesar el voto; reenvíalo.';
   }
 }
 

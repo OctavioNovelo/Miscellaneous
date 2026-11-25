@@ -59,21 +59,9 @@ class TelegramNotifier {
     const msg =
       `❌ <b>NOMBRE NO ENCONTRADO</b> (no se registró nada)\n` +
       `Nombre: ${esc(result.nombre)}\n` +
-      `Grado: ${esc(result.grado)} | Sección: ${esc(result.seccion)} | Hoja: ${esc(result.hoja)}\n` +
+      `Voto reportado: ${esc(result.voto)}\n` +
       `Operador que reportó: ${esc(result.operador)}\n` +
       `Revisar manualmente en el padrón.`;
-    return this.send(msg);
-  }
-
-  notifySeccionNoEncontrada(result) {
-    const msg = `❌ <b>SECCIÓN NO ENCONTRADA</b>: "${esc(result.seccion)}" no existe en la hoja "${esc(result.hoja)}". No se registró nada.`;
-    return this.send(msg);
-  }
-
-  notifyGradoNoEncontrado(result) {
-    const msg =
-      `❌ <b>GRADO NO ENCONTRADO</b>: "${esc(result.grado)}" no coincide con ninguna hoja del padrón ` +
-      `(válidos: Primero, Segundo, Tercero, Cuarto, Quinto). No se registró nada.`;
     return this.send(msg);
   }
 

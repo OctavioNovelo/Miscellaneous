@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>SISTEMA MAGI // CONTEO DE VOTOS</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark light">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
@@ -14,19 +15,20 @@
 <div class="crt-flicker"></div>
 
 <header class="topbar">
+  <h1 class="sr-only">Sistema MAGI: conteo de votos en vivo</h1>
   <div class="topbar-left">
     <span class="dot"></span> SISTEMA MAGI <span class="sep">//</span> CONTEO ELECTORAL EN VIVO
   </div>
   <div class="topbar-right">
     <span id="clock">00:00:00</span>
     <span class="sep">|</span>
-    <span id="conn-status" class="status-badge status-off">SIN CONEXION</span>
+    <span id="conn-status" class="status-badge status-off" role="status">SIN CONEXION</span>
   </div>
 </header>
 
 <main class="grid">
 
-  <!-- Panel de las 3 unidades MAGI (una por grado) -->
+  <!-- Unidades MAGI (una por grado) -->
   <section class="magi-row" id="magi-row">
     <!-- generado por JS -->
   </section>
@@ -34,22 +36,13 @@
   <!-- Totales centrales -->
   <section class="panel totals-panel">
     <h2>TALLY GENERAL</h2>
-    <div class="totals-grid">
-      <div class="candidate-block candidate-tomas">
-        <div class="candidate-name">TOMAS</div>
-        <div class="candidate-count" id="total-tomas">0</div>
-        <div class="candidate-pct" id="pct-tomas">0%</div>
-      </div>
-      <div class="candidate-block candidate-indeciso">
-        <div class="candidate-name">INDECISO</div>
-        <div class="candidate-count" id="total-indeciso">0</div>
-        <div class="candidate-pct" id="pct-indeciso">0%</div>
-      </div>
-      <div class="candidate-block candidate-alex">
-        <div class="candidate-name">ALEX</div>
-        <div class="candidate-count" id="total-alex">0</div>
-        <div class="candidate-pct" id="pct-alex">0%</div>
-      </div>
+    <div class="totals-grid" id="totals-grid"><!-- generado por JS --></div>
+
+    <div class="summary-row">
+      <div>CONFIRMADOS<span id="sum-confirmados">0</span></div>
+      <div>PENDIENTES<span id="sum-pendientes">0</span></div>
+      <div>DISCREPANCIAS<span id="sum-discrepancias">0</span></div>
+      <div title="Confirmados cuyo voto no es uno de los 6 candidatos">SIN CANDIDATO<span id="sum-otros">0</span></div>
     </div>
 
     <div class="turnout-row">
@@ -63,7 +56,7 @@
   <section class="panel chart-panel">
     <h2>DISTRIBUCION DE VOTO</h2>
     <div class="doughnut-wrap">
-      <svg id="doughnut-svg" viewBox="0 0 200 200"></svg>
+      <svg id="doughnut-svg" viewBox="0 0 200 200" role="img" aria-label="Distribución de votos confirmados por candidato"></svg>
       <div class="chart-legend" id="doughnut-legend"></div>
     </div>
   </section>

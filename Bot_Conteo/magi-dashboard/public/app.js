@@ -2,11 +2,11 @@
 
 const socket = io();
 
-const COLORS = {
-  tomas: '#35c3ff',
-  alex: '#ff5b7f',
-  indeciso: '#ffb000',
-};
+// Los candidatos llegan del servidor; el color sale de la variable CSS --c-<clave>.
+let CANDIDATOS = [];
+const keyOf = (nombre) => String(nombre).toLowerCase().replace(/[^a-z0-9]/g, '');
+const colorOf = (nombre) => `var(--c-${keyOf(nombre)}, var(--amber))`;
+const sumVotos = (votos) => CANDIDATOS.reduce((sum, c) => sum + (votos?.[c] || 0), 0);
 
 let lastActivityKey = null;
 
@@ -45,6 +45,7 @@ socket.on('error', (payload) => {
 });
 
 socket.on('stats', (stats) => {
+  CANDIDATOS = stats.candidatos || [];
   safeRender('renderMagiUnits', () => renderMagiUnits(stats.grados));
   safeRender('renderTotals', () => renderTotals(stats.totales));
   safeRender('renderDoughnut', () => renderDoughnut(stats.totales));
@@ -95,8 +96,8 @@ function renderMagiUnits(grados) {
       .map(
         (g, i) => `
       <div class="magi-unit" id="magi-${i}">
-        <div class="magi-hex">${g.magi.split('-')[0]}</div>
-        <div class="magi-name">${g.magi}</div>
+        <div class="magi-hex">${esc(g.magi.split('-')[0])}</div>
+        <div class="magi-name">${esc(g.magi)}</div>
         <div class="magi-sub">${esc(g.hoja.toUpperCase())}</div>
         <div class="magi-stats">
           <div>CONF<span id="magi-${i}-conf">0</span></div>
@@ -117,12 +118,10 @@ function renderMagiUnits(grados) {
     document.getElementById(`magi-${i}-pct`).textContent = Math.round(g.turnout * 100);
 
     const bar = document.getElementById(`magi-${i}-bar`);
-    const total = g.tomas + g.alex + g.indeciso || 1;
-    bar.innerHTML = `
-      <div class="magi-bar-seg" style="width:${(g.tomas / total) * 100}%;background:${COLORS.tomas}"></div>
-      <div class="magi-bar-seg" style="width:${(g.indeciso / total) * 100}%;background:${COLORS.indeciso}"></div>
-      <div class="magi-bar-seg" style="width:${(g.alex / total) * 100}%;background:${COLORS.alex}"></div>
-    `;
+    const total = sumVotos(g.votos) || 1;
+    bar.innerHTML = CANDIDATOS.map(
+      (c) => `<div class="magi-bar-seg" style="width:${(g.votos[c] / total) * 100}%;background:${colorOf(c)}"></div>`
+    ).join('');
 
     unit.classList.toggle('has-alert', g.discrepancias > 0);
   });
@@ -130,14 +129,29 @@ function renderMagiUnits(grados) {
 
 // --- Totales centrales ---
 function renderTotals(totales) {
-  animateNumber(document.getElementById('total-tomas'), totales.tomas);
-  animateNumber(document.getElementById('total-alex'), totales.alex);
-  animateNumber(document.getElementById('total-indeciso'), totales.indeciso);
+  const grid = document.getElementById('totals-grid');
+  if (grid.dataset.built !== CANDIDATOS.join('|')) {
+    grid.innerHTML = CANDIDATOS.map(
+      (c, i) => `
+      <div class="candidate-block" style="color:${colorOf(c)}">
+        <div class="candidate-name">${esc(c.toUpperCase())}</div>
+        <div class="candidate-count" id="total-c${i}">0</div>
+        <div class="candidate-pct" id="pct-c${i}">0%</div>
+      </div>`
+    ).join('');
+    grid.dataset.built = CANDIDATOS.join('|');
+  }
 
-  const confirmadosTotal = totales.tomas + totales.alex + totales.indeciso;
-  document.getElementById('pct-tomas').textContent = pct(totales.tomas, confirmadosTotal);
-  document.getElementById('pct-alex').textContent = pct(totales.alex, confirmadosTotal);
-  document.getElementById('pct-indeciso').textContent = pct(totales.indeciso, confirmadosTotal);
+  const votosTotal = sumVotos(totales.votos);
+  CANDIDATOS.forEach((c, i) => {
+    animateNumber(document.getElementById(`total-c${i}`), totales.votos[c] || 0);
+    document.getElementById(`pct-c${i}`).textContent = pct(totales.votos[c] || 0, votosTotal);
+  });
+
+  animateNumber(document.getElementById('sum-confirmados'), totales.confirmados);
+  animateNumber(document.getElementById('sum-pendientes'), totales.pendientes);
+  animateNumber(document.getElementById('sum-discrepancias'), totales.discrepancias);
+  animateNumber(document.getElementById('sum-otros'), totales.otros || 0);
 
   document.getElementById('turnout-fraction').textContent = `${totales.confirmados} / ${totales.padron}`;
   const turnoutPct = totales.padron ? (totales.confirmados / totales.padron) * 100 : 0;
@@ -145,68 +159,60 @@ function renderTotals(totales) {
   document.getElementById('turnout-pct').textContent = `${turnoutPct.toFixed(1)}%`;
 }
 
-const LEGEND_ITEMS = [
-  { key: 'tomas', label: 'Tomas', color: COLORS.tomas },
-  { key: 'indeciso', label: 'Indeciso', color: COLORS.indeciso },
-  { key: 'alex', label: 'Alex', color: COLORS.alex },
-];
-
 function legendHtml() {
-  return LEGEND_ITEMS.map(
-    (it) => `<span class="legend-item"><span class="legend-swatch" style="background:${it.color}"></span>${it.label}</span>`
+  return CANDIDATOS.map(
+    (c) => `<span class="legend-item"><span class="legend-swatch" style="background:${colorOf(c)}"></span>${esc(c)}</span>`
   ).join('');
+}
+
+// Se reconstruye la leyenda solo si cambia la lista de candidatos.
+function buildLegend(el) {
+  const sig = CANDIDATOS.join('|');
+  if (el.dataset.built === sig) return;
+  el.innerHTML = legendHtml();
+  el.dataset.built = sig;
 }
 
 // --- Dona de distribución global (SVG puro, sin librerías) ---
 function renderDoughnut(totales) {
   const svg = document.getElementById('doughnut-svg');
   const legend = document.getElementById('doughnut-legend');
-  if (!legend.dataset.built) {
-    legend.innerHTML = legendHtml();
-    legend.dataset.built = '1';
-  }
+  buildLegend(legend);
 
-  const total = totales.tomas + totales.alex + totales.indeciso;
+  const total = sumVotos(totales.votos);
   const radius = 80;
   const circumference = 2 * Math.PI * radius;
-  const segmentos = [
-    { valor: totales.tomas, color: COLORS.tomas },
-    { valor: totales.indeciso, color: COLORS.indeciso },
-    { valor: totales.alex, color: COLORS.alex },
-  ];
+  const segmentos = CANDIDATOS.map((c) => ({ valor: totales.votos[c] || 0, color: colorOf(c) }));
 
   let offset = 0;
   let circles = '';
   segmentos.forEach((seg) => {
     const fraccion = total > 0 ? seg.valor / total : 0;
     const dash = fraccion * circumference;
-    circles += `<circle cx="100" cy="100" r="${radius}" fill="none" stroke="${seg.color}" stroke-width="26"
+    circles += `<circle cx="100" cy="100" r="${radius}" fill="none" style="stroke:${seg.color}" stroke-width="26"
       stroke-dasharray="${dash} ${circumference - dash}" stroke-dashoffset="${-offset}"
       transform="rotate(-90 100 100)" stroke-linecap="butt" />`;
     offset += dash;
   });
 
   svg.innerHTML = `
-    <circle cx="100" cy="100" r="${radius}" fill="none" stroke="#1a1000" stroke-width="26" />
+    <circle cx="100" cy="100" r="${radius}" fill="none" style="stroke:var(--track)" stroke-width="26" />
     ${circles}
-    <text x="100" y="96" text-anchor="middle" fill="#ffd166" font-family="Rajdhani, sans-serif" font-size="30" font-weight="700">${total}</text>
-    <text x="100" y="118" text-anchor="middle" fill="#a56e00" font-family="Share Tech Mono, monospace" font-size="11">VOTOS CONF.</text>
+    <text x="100" y="96" text-anchor="middle" style="fill:var(--amber-bright)" font-family="Rajdhani, sans-serif" font-size="30" font-weight="700">${total}</text>
+    <text x="100" y="118" text-anchor="middle" style="fill:var(--amber-dim)" font-family="Share Tech Mono, monospace" font-size="11">VOTOS CONF.</text>
   `;
 }
 
 // --- Barras por grado (HTML/CSS puro, sin librerías) ---
 function renderBarChart(grados) {
   const legend = document.getElementById('bar-legend');
-  if (!legend.dataset.built) {
-    legend.className = 'chart-legend horizontal';
-    legend.innerHTML = legendHtml();
-    legend.dataset.built = '1';
-  }
+  legend.className = 'chart-legend horizontal';
+  buildLegend(legend);
 
   const container = document.getElementById('bar-chart-container');
   container.innerHTML = grados
     .map((g) => {
-      const total = g.tomas + g.alex + g.indeciso;
+      const total = sumVotos(g.votos);
       const base = total || 1;
       const seg = (valor, color) => {
         const w = (valor / base) * 100;
@@ -215,11 +221,11 @@ function renderBarChart(grados) {
       return `
         <div class="grado-bar-row">
           <div class="grado-bar-toprow">
-            <span class="grado-bar-label">${esc(g.hoja)}</span>
-            <span class="grado-bar-total">${total} voto(s) confirmado(s)</span>
+            <span class="grado-bar-label">${esc(g.magi)} · ${esc(g.hoja)}</span>
+            <span class="grado-bar-total">${g.confirmados}/${g.padron} conf. · ${g.pendientes} pend. · ${g.discrepancias} disc. · ${Math.round(g.turnout * 100)}%</span>
           </div>
           <div class="grado-bar-track">
-            ${seg(g.tomas, COLORS.tomas)}${seg(g.indeciso, COLORS.indeciso)}${seg(g.alex, COLORS.alex)}
+            ${CANDIDATOS.map((c) => seg(g.votos[c] || 0, colorOf(c))).join('')}
           </div>
         </div>`;
     })
@@ -256,10 +262,10 @@ function renderActivity(actividad) {
 
   list.innerHTML = actividad
     .map((a, i) => {
-      const voteClass = `activity-voto-${esc(a.voto.toLowerCase())}`;
+      const voteStyle = a.candidato ? `color:${colorOf(a.candidato)}` : 'color:var(--orange-alert)';
       const hora = new Date(a.fecha).toLocaleTimeString('es-MX', { hour12: false });
       const flash = !isFirstRender && i === 0 && newestKey !== lastActivityKey ? 'new-flash' : '';
-      return `<div class="activity-item ${flash}">[${hora}] <strong>${esc(a.nombre)}</strong> — ${esc(a.hoja)} Sec.${esc(a.seccion)} → <span class="${voteClass}">${esc(a.voto)}</span> (op. ${esc(a.operador) || '—'})</div>`;
+      return `<div class="activity-item ${flash}">[${hora}] <strong>${esc(a.nombre)}</strong> — ${esc(a.hoja)} Sec.${esc(a.seccion)} → <span class="activity-voto" style="${voteStyle}">${esc(a.voto || '—')}</span> (op. ${esc(a.operador) || '—'})</div>`;
     })
     .join('');
 

@@ -49,10 +49,17 @@ Panel local (no expuesto a internet) estilo terminal MAGI/NERV que lee tu
   10s por si acaso.
 - No escribe nada en el Excel — es de solo lectura, así que no hay riesgo de
   interferir con el bot ni con `runExclusive`.
-- Tres unidades "MAGI" (una por hoja/grado: Primer, Segundo y Tercer año)
-  muestran participación y el desglose de voto de esa hoja.
-- El panel central muestra el conteo global de Tomas / Alex / Indeciso, %
-  y una barra de participación general.
+- Cuatro unidades "MAGI" (una por hoja/grado: MELCHIOR-1 Primer año,
+  BALTHASAR-2 Segundo, CASPER-3 Tercero, MAGI-4 Cuarto) muestran
+  participación y el desglose de voto de esa hoja.
+- Las columnas se ubican por encabezado (`Salon`, `Nombre`, `Confirmado`,
+  `Voto Confirmado`, `Operador Confirmo`, `Fecha/Hora`, `Discrepancia`); si
+  alguna falta, cuenta cero. Un voto cuenta cuando `Confirmado` = SI y
+  `Voto Confirmado` es uno de: Castelan, German, Natalia, Gabriel, Jade,
+  Aaron (sin importar acentos/mayúsculas). Cualquier otro valor confirmado
+  aparece como "Sin candidato".
+- El panel central muestra el conteo global por candidato, %, confirmados,
+  pendientes, discrepancias y una barra de participación general.
 - Hay una gráfica de dona (distribución global) y una de barras apiladas
   (desglose por grado), un panel de alertas (discrepancias detectadas por el
   bot) y un registro de actividad con los últimos votos confirmados.

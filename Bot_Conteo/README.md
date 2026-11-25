@@ -12,20 +12,18 @@ ignora en silencio.
 ```
 VOTO
 Octavio Augusto Novelo Martinez
-A
-Segundo
-Tomas
+Jade
 ```
 
 | Línea | Qué es |
 |---|---|
 | `VOTO` | Obligatorio. Marca el mensaje como voto. |
-| Nombre | Nombre completo tal como está en el padrón. Puedes poner varios, uno por línea (misma Sección y Grado). |
-| Sección | `A` a `G`. |
-| Grado | `Primero`/`Primer`/`1`, `Segundo`/`2`, `Tercero`/`Tercer`/`3`, `Cuarto`/`4`, `Quinto`/`5` (no importan mayúsculas ni acentos). |
-| Voto | `Tomas`, `Alex` o `Indeciso`. **Opcional**: si se omite, cuenta como Alex. |
+| Nombre | Nombre completo tal como está en el padrón. Una persona por mensaje. Se busca en todos los grados y secciones. |
+| Por quién votas | `Castelan`, `German`, `Natalia`, `Gabriel`, `Jade` o `Aaron`. **Opcional**: si se omite, cuenta como Aaron. |
 
-También funciona en una sola línea: `VOTO: Juan Perez C Segundo`.
+Si el nombre no está en el padrón, o la opción no es válida, el bot responde con el motivo y no registra nada.
+
+Si el mensaje tiene solo `VOTO: Juan Perez`, el voto cuenta como Aaron.
 
 ### Quién puede votar
 
@@ -36,7 +34,7 @@ También funciona en una sola línea: `VOTO: Juan Perez C Segundo`.
 ## 2. Instalación
 
 ```bash
-cd Papu_Conteo
+cd Bot_Conteo
 npm install
 cp .env.example .env
 ```
@@ -70,16 +68,13 @@ npm test
 ## 4. Qué pasa con cada voto
 
 ### Búsqueda
-1. El **Grado** elige la hoja (`Primer año`, `Segundo año`, …). Si no existe, no se registra nada.
-2. Se filtran las filas por **Sección**.
-3. Se busca el **Nombre** más parecido (tolera acentos, mayúsculas, orden de palabras y errores leves).
-4. Si dos nombres empatan, se desempata con la columna **Operador Asignado**. Si sigue ambiguo, se usa la fila de mayor puntaje y se avisa por Telegram.
+1. Se busca el **Nombre** más parecido en todos los grados y secciones (tolera acentos, mayúsculas, orden de palabras y errores leves).
+2. Si dos nombres empatan, se desempata con la columna **Operador**. Si sigue ambiguo, se usa la fila de mayor puntaje y se avisa por Telegram.
 
-**El bot nunca agrega personas nuevas.** Si el nombre, la sección o el grado no existen,
-no toca el Excel y avisa por Telegram.
+**El bot nunca agrega personas nuevas.** Si el nombre no existe, no toca el Excel y avisa por Telegram.
 
 ### Registro
-- Persona **sin confirmar**: se marca el voto, `Confirmado = SI`, se guarda operador y fecha, y la fila se pinta de verde.
+- Persona **sin confirmar**: se marca la columna del candidato con `1` (las demás quedan en blanco), `Confirmado = SI`, se guarda operador y fecha, y la fila se pinta de verde.
 - Persona **ya confirmada** con el **mismo voto**: se ignora (duplicado) y Telegram lo registra como aviso.
 - Persona **ya confirmada** con **voto distinto**: la fila se pinta de naranja y se agrega una nota en `Discrepancia`. **El voto original nunca se borra**; Telegram avisa.
 
@@ -102,7 +97,6 @@ Al arrancar, el bot copia el padrón a `data/Padron.backup-<fecha-hora>.xlsx`.
 ### Alertas a Telegram
 - Discrepancia entre votos.
 - Nombre no encontrado.
-- Sección o grado inexistentes.
 - Coincidencia ambigua (se registra la mejor coincidencia y se avisa).
 - Formato inválido.
 - Fallo de guardado (con operador y nombres pendientes).
@@ -110,23 +104,24 @@ Al arrancar, el bot copia el padrón a `data/Padron.backup-<fecha-hora>.xlsx`.
 
 ## 5. Estructura del Excel
 
-`data/Padron.xlsx` tiene una hoja por grado: `Primer año`, `Segundo año`, `Tercer año`,
-`Cuarto año`, `Quinto año`, y `Revisar_Manual` (no se usa para votos).
-Todas las hojas de grado comparten columnas:
+`data/Padron.xlsx` es el Excel combinado de listas (los votantes de Alex convertidos en
+`indeciso Aaron`). Tiene una hoja por grado: `Primer año`, `Segundo año`, `Tercer año`,
+`Cuarto año`. Las columnas se leen por **nombre de encabezado**, no por posición. Cada
+hoja debe tener `Salon` (o `Seccion`), `Nombre` y las columnas de candidatos `Castelan`,
+`German`, `Natalia`, `Gabriel`, `Jade` y `Aaron`; si falta alguna, el bot no arranca.
 
 | Columna | Uso |
 |---|---|
-| `Seccion`, `Nombre`, `Telefono` | Datos del padrón |
-| `Tomas`, `Alex`, `Indeciso` | Marca `1` en la columna del voto |
-| `Operador Asignado` | Para desempatar nombres parecidos |
-| `Confirmado` | `SI`/`NO`: fuente de verdad de si el voto ya se contó |
-| `Voto Confirmado` | `Tomas` / `Alex` / `Indeciso` |
+| `Salon` (sección), `Nombre`, `Número Tel.` | Datos de la persona |
+| `Castelan` … `Aaron` | Marca `1` en el candidato por el que votó |
+| `Operador` | Operador asignado; para desempatar nombres parecidos |
+| `Confirmado` | `SI`/`NO`: fuente de verdad de si el voto ya se contó. Se agrega al cargar si no existe |
+| `Voto Confirmado` | Nombre del candidato votado |
 | `Operador Confirmo` | Quién registró el primer voto válido |
 | `Fecha/Hora` | Cuándo se registró |
 | `Discrepancia` | Historial de discrepancias (no borra el voto) |
 
-Al arrancar, las personas precargadas como Tomas o Indeciso se marcan como confirmadas
-(precarga inicial). Es idempotente.
+Las marcas `Tomas`, `Alex` e `Indeciso` ya no cuentan como voto: el bot no las confirma al arrancar.
 
 ## 6. Dashboard MAGI
 
