@@ -1,0 +1,16 @@
+{
+  "name": "magi-vote-dashboard",
+  "version": "1.0.0",
+  "description": "Dashboard local estilo MAGI (NERV/Evangelion) para visualizar en vivo el conteo de votos del Padron.xlsx",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "chokidar": "^3.6.0",
+    "dotenv": "^16.4.5",
+    "exceljs": "^4.4.0",
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  }
+}

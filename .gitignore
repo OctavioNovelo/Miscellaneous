@@ -3,3 +3,6 @@
 sesion/
 # Preguntas reales de alumnos: no se suben al repo.
 sin_respuesta.jsonl
+
+# Padrones (datos personales) y su carpeta data: cada dispositivo guarda el suyo.
+Bot_Conteo/*/data/

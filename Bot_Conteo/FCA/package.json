@@ -1,0 +1,18 @@
+{
+  "name": "whatsapp-voto-bot",
+  "version": "1.0.0",
+  "description": "Bot de WhatsApp que registra votos en un Excel y notifica discrepancias por Telegram",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test test/"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "exceljs": "^4.4.0",
+    "node-telegram-bot-api": "^0.66.0",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "github:wwebjs/whatsapp-web.js#main"
+  }
+}
