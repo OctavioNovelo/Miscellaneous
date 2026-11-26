@@ -15,12 +15,12 @@ test('nombre completo y por quién votas', () => {
   assert.deepEqual(r, { ok: true, data: { nombre: 'Octavio Augusto Novelo Martinez', voto: 'Jade', grado: null, seccion: null } });
 });
 
-test('sin segunda línea el voto es Aaron por defecto', () => {
-  assert.deepEqual(parseVoteMessage('VOTO\nJuan Perez').data, { nombre: 'Juan Perez', voto: 'Aaron', grado: null, seccion: null });
+test('sin segunda línea el voto es Voto Omar por defecto', () => {
+  assert.deepEqual(parseVoteMessage('VOTO\nJuan Perez').data, { nombre: 'Juan Perez', voto: 'Voto Omar', grado: null, seccion: null });
 });
 
 test('una sola línea después de VOTO es el nombre', () => {
-  assert.deepEqual(parseVoteMessage('VOTO: Juan Perez').data, { nombre: 'Juan Perez', voto: 'Aaron', grado: null, seccion: null });
+  assert.deepEqual(parseVoteMessage('VOTO: Juan Perez').data, { nombre: 'Juan Perez', voto: 'Voto Omar', grado: null, seccion: null });
 });
 
 test('grado y salón en la línea del nombre se quitan del nombre', () => {
@@ -28,13 +28,13 @@ test('grado y salón en la línea del nombre se quitan del nombre', () => {
     nombre: 'Juan Perez', voto: 'Jade', grado: 'Segundo año', seccion: 'A',
   });
   assert.deepEqual(parseVoteMessage('VOTO\nJuan Perez Primer año c').data, {
-    nombre: 'Juan Perez', voto: 'Aaron', grado: 'Primer año', seccion: 'C',
+    nombre: 'Juan Perez', voto: 'Voto Omar', grado: 'Primer año', seccion: 'C',
   });
 });
 
 test('sin grado ni salón el campo queda vacío', () => {
   assert.deepEqual(parseVoteMessage('VOTO\nJuan Perez').data, {
-    nombre: 'Juan Perez', voto: 'Aaron', grado: null, seccion: null,
+    nombre: 'Juan Perez', voto: 'Voto Omar', grado: null, seccion: null,
   });
 });
 

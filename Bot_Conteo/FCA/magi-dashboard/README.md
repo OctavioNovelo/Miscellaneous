@@ -55,8 +55,8 @@ Panel local (no expuesto a internet) estilo terminal MAGI/NERV que lee tu
 - Las columnas se ubican por encabezado (`Salon`, `Nombre`, `Confirmado`,
   `Voto Confirmado`, `Operador Confirmo`, `Fecha/Hora`, `Discrepancia`); si
   alguna falta, cuenta cero. Un voto cuenta cuando `Confirmado` = SI y
-  `Voto Confirmado` es uno de: Castelan, German, Natalia, Gabriel, Jade,
-  Aaron (sin importar acentos/mayúsculas). Cualquier otro valor confirmado
+  `Voto Confirmado` es una de: Voto Omar, NO voto por Omar, No ha votado
+  (sin importar acentos/mayúsculas). Cualquier otro valor confirmado
   aparece como "Sin candidato".
 - El panel central muestra el conteo global por candidato, %, confirmados,
   pendientes, discrepancias y una barra de participación general.

@@ -19,11 +19,11 @@ Jade
 |---|---|
 | `VOTO` | Obligatorio. Marca el mensaje como voto. |
 | Nombre | Nombre completo tal como está en el padrón. Una persona por mensaje. Se busca en todos los grados y secciones. |
-| Por quién votas | `Castelan`, `German`, `Natalia`, `Gabriel`, `Jade` o `Aaron`. **Opcional**: si se omite, cuenta como Aaron. |
+| Por quién votas | `Voto Omar`, `NO voto por Omar` o `No ha votado`. **Opcional**: si se omite, cuenta como Voto Omar. |
 
 Si el nombre no está en el padrón, o la opción no es válida, el bot responde con el motivo y no registra nada.
 
-Si el mensaje tiene solo `VOTO: Juan Perez`, el voto cuenta como Aaron.
+Si el mensaje tiene solo `VOTO: Juan Perez`, el voto cuenta como Voto Omar.
 
 ### Quién puede votar
 
@@ -104,16 +104,15 @@ Al arrancar, el bot copia el padrón a `data/Padron.backup-<fecha-hora>.xlsx`.
 
 ## 5. Estructura del Excel
 
-`data/Padron.xlsx` es el Excel combinado de listas (los votantes de Alex convertidos en
-`indeciso Aaron`). Tiene una hoja por grado: `Primer año`, `Segundo año`, `Tercer año`,
-`Cuarto año`. Las columnas se leen por **nombre de encabezado**, no por posición. Cada
-hoja debe tener `Salon` (o `Seccion`), `Nombre` y las columnas de candidatos `Castelan`,
-`German`, `Natalia`, `Gabriel`, `Jade` y `Aaron`; si falta alguna, el bot no arranca.
+`data/Padron.xlsx` se genera desde la hoja de Google con `node src/normalizarPadron.js <carpeta-csv> data/Padron.xlsx`.
+Tiene una hoja por grado (`Primer año` a `Noveno año`) más `OTROS`. Las columnas se leen por **nombre de encabezado**, no por posición. Cada
+hoja debe tener `Salon` (o `Seccion`), `Nombre` y las columnas de opción `Voto Omar`,
+`NO voto por Omar` y `No ha votado`; si falta alguna, el bot no arranca.
 
 | Columna | Uso |
 |---|---|
 | `Salon` (sección), `Nombre`, `Número Tel.` | Datos de la persona |
-| `Castelan` … `Aaron` | Marca `1` en el candidato por el que votó |
+| `Voto Omar` … `No ha votado` | Marca `1` en la opción elegida (`No ha votado` para quien no ha votado) |
 | `Operador` | Operador asignado; para desempatar nombres parecidos |
 | `Confirmado` | `SI`/`NO`: fuente de verdad de si el voto ya se contó. Se agrega al cargar si no existe |
 | `Voto Confirmado` | Nombre del candidato votado |
@@ -121,7 +120,14 @@ hoja debe tener `Salon` (o `Seccion`), `Nombre` y las columnas de candidatos `Ca
 | `Fecha/Hora` | Cuándo se registró |
 | `Discrepancia` | Historial de discrepancias (no borra el voto) |
 
-Las marcas `Tomas`, `Alex` e `Indeciso` ya no cuentan como voto: el bot no las confirma al arrancar.
+Las personas agregadas a `OTROS` a mano se buscan como cualquier otra hoja; el bot nunca agrega filas.
+
+**Marcas supuestas.** Al generar el padrón, todas las filas salen con `Confirmado = NO`. El `1` que
+trae cada fila en `Voto Omar`, `NO voto por Omar` o `No ha votado` es solo una suposición de la lista.
+Al registrar un voto, el bot:
+- Si la persona no está confirmada: pone `1` en la opción elegida, borra las otras marcas y confirma.
+  El aviso dice si confirmó el supuesto, lo cambió por otra opción, o si no tenía supuesto.
+- Si ya está confirmada: duplicado si es la misma opción; discrepancia si es distinta (no cambia el voto).
 
 ## 6. Dashboard MAGI
 

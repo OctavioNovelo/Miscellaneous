@@ -15,7 +15,7 @@ const EXCEL_PATH = path.resolve(process.env.EXCEL_PATH || './data/Padron.xlsx');
 const GRUPO_ID = (process.env.VOTACION_GRUPO_ID || '').trim();
 
 const FORMATO_AYUDA =
-  'Formato (una persona por mensaje):\nVOTO\nNombre completo [grado] [salón]\nPor quién votas (opcional; si se omite cuenta como Aaron)\n\nGrado: Primero a Noveno, u OTROS. Salón: una letra (p. ej. A).';
+  'Formato (una persona por mensaje):\nVOTO\nNombre completo [grado] [salón]\nPor quién votas (opcional; si se omite cuenta como Voto Omar)\n\nGrado: Primero a Noveno, u OTROS. Salón: una letra (p. ej. A).';
 
 const excelManager = new ExcelManager(EXCEL_PATH);
 const telegram = new TelegramNotifier(process.env.TELEGRAM_BOT_TOKEN, process.env.TELEGRAM_CHAT_ID);
@@ -136,13 +136,20 @@ async function handleIncomingMessage(message) {
   await message.reply(await procesarResultadoVoto(result));
 }
 
+/** Qué pasó con la marca supuesta de la fila (la que estaba en el padrón antes de confirmar). */
+function describirSupuesto({ supuestoPrevio, voto }) {
+  if (supuestoPrevio === voto) return `Confirma el voto supuesto: ${voto}.`;
+  if (supuestoPrevio) return `Cambia el voto supuesto "${supuestoPrevio}" por "${voto}".`;
+  return 'Voto nuevo (no tenía voto supuesto).';
+}
+
 /** Avisa a Telegram cuando corresponde y devuelve el texto de respuesta para el grupo. */
 async function procesarResultadoVoto(result) {
   switch (result.status) {
     case 'REGISTRADO':
       // La ambigüedad se resuelve/avisa solo por Telegram.
       if (result.ambiguous) await telegram.notifyAmbiguo(result);
-      return `✅ Voto registrado.\n${result.nombreEnPadron} | ${result.grado} | Sección ${result.seccion} | Voto: ${result.voto}`;
+      return `✅ Voto registrado.\n${result.nombreEnPadron} | ${result.grado} | Sección ${result.seccion} | Voto: ${result.voto}\n${describirSupuesto(result)}`;
 
     case 'DUPLICADO_IGNORADO':
       await telegram.notifyDuplicado(result);

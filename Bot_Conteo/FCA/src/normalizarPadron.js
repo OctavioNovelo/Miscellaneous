@@ -7,13 +7,17 @@ const fs = require('fs');
 const path = require('path');
 const ExcelJS = require('exceljs');
 const { normalize } = require('./matcher');
+const { CANDIDATOS } = require('./excelManager');
 
-// Encabezados de las hojas actuales del padrón (data/Padron.xlsx, hoja "Primer año").
+// Encabezados del padrón: las 3 opciones de voto son las columnas de candidatos.
 const HEADERS = [
-  'Salon', 'Nombre', 'Número Tel.', 'Tomas', 'Alex', 'Indeciso', 'Indeciso CE',
-  'Castelan', 'German', 'Natalia', 'Gabriel', 'Jade', 'Aaron', 'Operador',
+  'Salon', 'Nombre', 'Número Tel.', ...CANDIDATOS, 'Operador',
   'Confirmado', 'Voto Confirmado', 'Operador Confirmo', 'Fecha/Hora', 'Discrepancia',
 ];
+
+// Valor de la lista -> opción del padrón. Lo que no sea SI ni NO (vacío, INSEGURO) es "No ha votado".
+const OPCION_POR_VOTO = { SI: CANDIDATOS[0], NO: CANDIDATOS[1] };
+const NO_HA_VOTADO = CANDIDATOS[2];
 
 // Archivo CSV -> nombre de hoja del padrón.
 const HOJAS = {
@@ -69,6 +73,8 @@ function parseGrado(text) {
       }
     });
     if (heads.length) { bloques = heads; return; }
+    // Renglón "SALÓN X" que abre otro grupo de bloques: no es alumno; la fila siguiente trae sus encabezados.
+    if (r.some((v) => /^SAL[OÓ]N\s+\S+$/i.test(String(v).trim()))) { bloques = []; return; }
     for (const b of bloques) {
       const nombre = String(r[b.c + 1] || '').trim();
       if (!nombre) continue;
@@ -82,7 +88,11 @@ function parseGrado(text) {
   return { alumnos, descartadas };
 }
 
-/** Libro con una hoja por grado. El "Voto" de la lista (SI/INSEGURO/NO) no es un candidato: no se copia. */
+/**
+ * Libro con una hoja por grado. El "Voto" de la lista se traduce a una de las 3 opciones:
+ * SI -> Voto Omar, NO -> NO voto por Omar; lo demás (vacío, INSEGURO) -> No ha votado.
+ * Todas las filas salen Confirmado = NO: la marca es supuesta y el bot la confirma al registrar el voto.
+ */
 function construirLibro(grados) {
   const wb = new ExcelJS.Workbook();
   for (const [hoja, alumnos] of grados) {
@@ -93,6 +103,10 @@ function construirLibro(grados) {
       fila[HEADERS.indexOf('Salon')] = a.salon || null;
       fila[HEADERS.indexOf('Nombre')] = a.nombre;
       fila[HEADERS.indexOf('Operador')] = a.operador || null;
+      // Marca supuesta: la confirma el bot al registrar el voto, no el generador.
+      const opcion = OPCION_POR_VOTO[String(a.voto || '').trim().toUpperCase()] || NO_HA_VOTADO;
+      fila[HEADERS.indexOf(opcion)] = 1;
+      fila[HEADERS.indexOf('Confirmado')] = 'NO';
       ws.addRow(fila);
     }
   }

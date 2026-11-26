@@ -2,8 +2,8 @@
 
 const { normalize } = require('./matcher');
 
-// Si el mensaje no trae la segunda línea (por quién vota), se cuenta para Aaron.
-const VOTO_POR_DEFECTO = 'Aaron';
+// Si el mensaje no trae la segunda línea (por quién vota), se cuenta para Voto Omar.
+const VOTO_POR_DEFECTO = 'Voto Omar';
 
 // Palabras reservadas de grado: si aparecen en el nombre, se toman como grado y no como parte del nombre.
 const GRADOS = {
@@ -28,7 +28,7 @@ const PREFIJO_VOTO = /^\s*voto(?=\s|:|$)[:\s]*/i;
  * Formato (una persona por mensaje):
  *   VOTO
  *   Nombre completo [grado] [salón]   ← grado y salón son opcionales
- *   Por quién votas (opcional; si se omite cuenta como Aaron)
+ *   Por quién votas (opcional; si se omite cuenta como Voto Omar)
  *
  * En la línea del nombre: "Segundo"…"Noveno" u "OTROS" se toman como grado ("año" se ignora); una sola letra como salón.
  * Que la opción de voto sea válida lo decide el Excel (ExcelManager.processVote), no el parser.

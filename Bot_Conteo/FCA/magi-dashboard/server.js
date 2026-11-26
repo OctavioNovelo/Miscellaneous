@@ -28,7 +28,7 @@ const HEADERS = {
   DISCREPANCIA: ['DISCREPANCIA'],
 };
 
-const CANDIDATOS = ['Castelan', 'German', 'Natalia', 'Gabriel', 'Jade', 'Aaron'];
+const CANDIDATOS = ['Voto Omar', 'NO voto por Omar', 'No ha votado'];
 const CANDIDATO_POR_NORMA = new Map(CANDIDATOS.map((c) => [normalize(c), c]));
 
 const MAGI_NAMES = {
@@ -100,7 +100,7 @@ function statsFromWorkbook(wb) {
       if (normalize(get(row, 'CONFIRMADO')) !== 'SI') return;
 
       confirmados += 1;
-      // Solo cuentan los 6 candidatos; cualquier otro valor (p. ej. marcas viejas) va a "otros".
+      // Solo cuentan las 3 opciones de voto; cualquier otro valor (p. ej. marcas viejas) va a "otros".
       const candidato = CANDIDATO_POR_NORMA.get(normalize(get(row, 'VOTO_CONFIRMADO'))) || null;
       if (candidato) votos[candidato] += 1;
       else otros += 1;

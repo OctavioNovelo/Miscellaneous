@@ -13,13 +13,10 @@
   --accent: #B7EB0A;
   --on-accent: #13294A;
   --on-base: #FFFFFF;
-  /* Candidatos: escala del azul base (oscuro -> claro). app.js usa --c-<clave> y --t-<clave> (texto encima). */
-  --c-castelan: #0B1B33; --t-castelan: #FFFFFF;
-  --c-german:   #1C4578; --t-german:   #FFFFFF;
-  --c-natalia:  #2F65A6; --t-natalia:  #FFFFFF;
-  --c-gabriel:  #5A8BC9; --t-gabriel:  #0B1B33;
-  --c-jade:     #8FB2DE; --t-jade:     #0B1B33;
-  --c-aaron:    #C3D5EE; --t-aaron:    #0B1B33;
+  /* Opciones de voto (clave = nombre en minúsculas sin signos, ver keyOf en app.js); --t-<clave> es el texto encima. */
+  --c-votoomar:       #0B1B33; --t-votoomar:       #FFFFFF;
+  --c-novotoporomar:  #5A8BC9; --t-novotoporomar:  #0B1B33;
+  --c-nohavotado:     #C3D5EE; --t-nohavotado:     #0B1B33;
   --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
 }

@@ -41,61 +41,63 @@ test('persona inexistente: NOMBRE_NO_ENCONTRADO sin tocar los grados; se anota e
   const sheet = m.workbook.getWorksheet('Segundo año');
   const antes = sheet.rowCount;
   const aviso = m.workbook.getWorksheet('No encontrados').rowCount;
-  const r = m.processVote({ nombre: 'Persona Inexistente Zzz', voto: 'Jade', operador: 'Prueba' });
+  const r = m.processVote({ nombre: 'Persona Inexistente Zzz', voto: 'Voto Omar', operador: 'Prueba' });
   assert.equal(r.status, 'NOMBRE_NO_ENCONTRADO');
   assert.equal(sheet.rowCount, antes);
-  const anotado = m.registrarNoEncontrado({ nombre: 'Persona Inexistente Zzz', voto: 'Jade', operador: 'Prueba' });
+  const anotado = m.registrarNoEncontrado({ nombre: 'Persona Inexistente Zzz', voto: 'Voto Omar', operador: 'Prueba' });
   assert.equal(anotado.status, 'ANOTADO_NO_ENCONTRADO');
   const hoja = m.workbook.getWorksheet('No encontrados');
   assert.equal(hoja.rowCount, aviso + 1);
   assert.equal(hoja.getRow(hoja.rowCount).getCell(2).value, 'Persona Inexistente Zzz');
 });
 
-test('candidato que no está en la tabla de Aaron: CANDIDATO_NO_VALIDO y el Excel no cambia', async () => {
+test('candidato que no es una opción de voto: CANDIDATO_NO_VALIDO y el Excel no cambia', async () => {
   const m = await cargarCopia();
   const { nombre } = personaSinConfirmar(m, 'Segundo año');
   const r = m.processVote({ nombre, voto: 'Tomas', operador: 'Prueba' });
   assert.equal(r.status, 'CANDIDATO_NO_VALIDO');
   assert.deepEqual(r.opciones, CANDIDATOS);
-  const row = m.workbook.getWorksheet('Segundo año').getRow(m.workbook.getWorksheet('Segundo año').rowCount);
-  assert.notEqual(row.getCell(col(m, 'Segundo año', 'CONFIRMADO')).value, 'SI');
+  const sheet = m.workbook.getWorksheet('Segundo año');
+  const c = colsOf(sheet);
+  const fila = sheet.getRows(2, sheet.rowCount - 1).find((r) => r.getCell(c.NOMBRE).value === nombre);
+  assert.notEqual(fila.getCell(c.CONFIRMADO).value, 'SI', 'la persona sigue sin confirmar');
 });
 
 test('persona real sin confirmar: REGISTRADO con su candidato, y el mismo voto repetido es duplicado', async () => {
   const m = await cargarCopia();
   const { nombre } = personaSinConfirmar(m, 'Segundo año');
 
-  const primero = m.processVote({ nombre, voto: 'Jade', operador: 'Operador A' });
+  const primero = m.processVote({ nombre, voto: 'Voto Omar', operador: 'Operador A' });
   assert.equal(primero.status, 'REGISTRADO');
-  assert.equal(primero.voto, 'Jade');
+  assert.equal(primero.voto, 'Voto Omar');
 
   const c = colsOf(m.workbook.getWorksheet('Segundo año'));
   const row = m.workbook.getWorksheet('Segundo año').getRow(primero.rowNumber);
   assert.equal(row.getCell(c.CONFIRMADO).value, 'SI');
-  assert.equal(row.getCell(c.candidatos.Jade).value, 1);
-  assert.equal(row.getCell(c.candidatos.Aaron).value, null, 'los otros candidatos quedan en blanco');
+  assert.equal(row.getCell(c.candidatos['Voto Omar']).value, 1);
+  assert.equal(row.getCell(c.candidatos['No ha votado']).value, null, 'los otros candidatos quedan en blanco');
 
-  const segundo = m.processVote({ nombre, voto: 'Jade', operador: 'Operador B' });
+  const segundo = m.processVote({ nombre, voto: 'Voto Omar', operador: 'Operador B' });
   assert.equal(segundo.status, 'DUPLICADO_IGNORADO');
 });
 
 test('mismo nombre con otro candidato de otro operador: DISCREPANCIA y el voto original se mantiene', async () => {
   const m = await cargarCopia();
   const { nombre } = personaSinConfirmar(m, 'Segundo año');
-  m.processVote({ nombre, voto: 'Jade', operador: 'Operador A' });
-  const r = m.processVote({ nombre, voto: 'Gabriel', operador: 'Operador B' });
+  m.processVote({ nombre, voto: 'Voto Omar', operador: 'Operador A' });
+  const r = m.processVote({ nombre, voto: 'NO voto por Omar', operador: 'Operador B' });
   assert.equal(r.status, 'DISCREPANCIA');
-  assert.equal(r.votoPrevio, 'Jade');
+  assert.equal(r.votoPrevio, 'Voto Omar');
 });
 
-test('sin voto explícito el candidato es Aaron', async () => {
+test('un voto con opción válida se registra en su columna', async () => {
   const m = await cargarCopia();
   const { nombre } = personaSinConfirmar(m, 'Tercer año');
-  const r = m.processVote({ nombre, voto: 'Aaron', operador: 'Prueba' });
+  const r = m.processVote({ nombre, voto: 'NO voto por Omar', operador: 'Prueba' });
   assert.equal(r.status, 'REGISTRADO');
   assert.equal(r.hoja, 'Tercer año');
   const c = colsOf(m.workbook.getWorksheet('Tercer año'));
-  assert.equal(m.workbook.getWorksheet('Tercer año').getRow(r.rowNumber).getCell(c.candidatos.Aaron).value, 1);
+  assert.equal(m.workbook.getWorksheet('Tercer año').getRow(r.rowNumber).getCell(c.candidatos['NO voto por Omar']).value, 1);
 });
 
 test('edición manual del Excel: recargarSiCambio la recoge antes de registrar', async () => {
@@ -115,7 +117,7 @@ test('edición manual del Excel: recargarSiCambio la recoge antes de registrar',
 
   // Sin cambios posteriores no recarga.
   assert.equal(await m.recargarSiCambio(), false);
-  const r = m.processVote({ nombre, voto: 'Natalia', operador: 'Prueba' });
+  const r = m.processVote({ nombre, voto: 'NO voto por Omar', operador: 'Prueba' });
   assert.equal(r.status, 'REGISTRADO');
   // El voto se aplicó sobre el archivo ya editado: la edición manual sigue ahí.
   assert.equal(m.workbook.getWorksheet('Segundo año').getRow(2).getCell(col(m, 'Segundo año', 'OPERADOR_ASIGNADO')).value, 'Editado a mano');
@@ -133,9 +135,9 @@ test('grado y salón limitan la búsqueda: el mismo nombre en otro grado no se t
   const m = await cargarCopia();
   const { nombre } = personaSinConfirmar(m, 'Segundo año');
   // Con el grado equivocado no debe encontrarla: la búsqueda queda dentro de Primer año.
-  const mal = m.processVote({ nombre, voto: 'Jade', operador: 'Prueba', grado: 'Primer año' });
+  const mal = m.processVote({ nombre, voto: 'Voto Omar', operador: 'Prueba', grado: 'Primer año' });
   assert.notEqual(mal.hoja, 'Segundo año');
-  const bien = m.processVote({ nombre, voto: 'Jade', operador: 'Prueba', grado: 'Segundo año' });
+  const bien = m.processVote({ nombre, voto: 'Voto Omar', operador: 'Prueba', grado: 'Segundo año' });
   assert.equal(bien.status, 'REGISTRADO');
   assert.equal(bien.hoja, 'Segundo año');
 });
@@ -161,18 +163,37 @@ test('busca en los grados nuevos: Noveno año y OTROS', async () => {
   const m = await cargarCopia();
   for (const hoja of ['Noveno año', 'OTROS', 'Séptimo año']) {
     const { nombre } = personaSinConfirmar(m, hoja);
-    const sinGrado = m.processVote({ nombre, voto: 'Jade', operador: 'Prueba' });
+    const sinGrado = m.processVote({ nombre, voto: 'Voto Omar', operador: 'Prueba' });
     assert.equal(sinGrado.status, 'REGISTRADO', hoja);
-    const conGrado = m.processVote({ nombre, voto: 'Jade', operador: 'Prueba', grado: hoja });
+    const conGrado = m.processVote({ nombre, voto: 'Voto Omar', operador: 'Prueba', grado: hoja });
     assert.equal(conGrado.hoja, hoja);
   }
+});
+
+test('marca supuesta en otra columna: el voto Omar la cambia y queda confirmado', async () => {
+  const m = await cargarCopia();
+  const sheet = m.workbook.getWorksheet('Segundo año');
+  const c = colsOf(sheet);
+  const { nombre } = personaSinConfirmar(m, 'Segundo año');
+  const fila = sheet.getRows(2, sheet.rowCount - 1).find((r) => r.getCell(c.NOMBRE).value === nombre);
+  for (const n of CANDIDATOS) fila.getCell(c.candidatos[n]).value = null;
+  fila.getCell(c.candidatos['NO voto por Omar']).value = 1; // supuesto en E
+  fila.commit();
+  const r = m.processVote({ nombre, voto: 'Voto Omar', operador: 'Prueba' });
+  assert.equal(r.status, 'REGISTRADO');
+  assert.equal(r.supuestoPrevio, 'NO voto por Omar');
+  const row = sheet.getRow(r.rowNumber);
+  assert.equal(row.getCell(c.candidatos['Voto Omar']).value, 1);
+  assert.equal(row.getCell(c.candidatos['NO voto por Omar']).value, null);
+  assert.equal(row.getCell(c.CONFIRMADO).value, 'SI');
+  assert.equal(row.getCell(c.VOTO_CONFIRMADO).value, 'Voto Omar');
 });
 
 test('hoja de grado sin una columna de candidato: falla con el mensaje de columnas faltantes', async () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'padron-test-'));
   const archivo = path.join(dir, 'Padron.xlsx');
   const wb = new ExcelJS.Workbook();
-  wb.addWorksheet('Octavo año').addRow(['Salon', 'Nombre', 'Operador', ...CANDIDATOS.filter((c) => c !== 'Aaron')]);
+  wb.addWorksheet('Octavo año').addRow(['Salon', 'Nombre', 'Operador', ...CANDIDATOS.filter((c) => c !== 'No ha votado')]);
   await wb.xlsx.writeFile(archivo);
-  await assert.rejects(new ExcelManager(archivo).load(), { message: 'La hoja "Octavo año" no tiene las columnas: Aaron.' });
+  await assert.rejects(new ExcelManager(archivo).load(), { message: 'La hoja "Octavo año" no tiene las columnas: No ha votado.' });
 });
