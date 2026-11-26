@@ -4,8 +4,8 @@ const fs = require('fs');
 const ExcelJS = require('exceljs');
 const { findBestMatch, normalize } = require('./matcher');
 
-// Opciones de voto: las columnas de candidatos de la tabla de Aaron (el orden del Excel no importa).
-const CANDIDATOS = ['Castelan', 'German', 'Natalia', 'Gabriel', 'Jade', 'Aaron'];
+// Opciones de voto: las 6 columnas de Aaron más "No ha votado" (el orden del Excel no importa).
+const CANDIDATOS = ['Castelan', 'German', 'Natalia', 'Gabriel', 'Jade', 'Aaron', 'No ha votado'];
 
 // Columnas de confirmación: no existen en las listas; se agregan al final de cada hoja al cargar.
 const TRACKING_HEADERS = {
@@ -187,6 +187,11 @@ class ExcelManager {
     return { status: 'ANOTADO_NO_ENCONTRADO', nombre, voto, operador, rowNumber: row.number };
   }
 
+  /** ¿Hay una persona con ese nombre en alguna hoja? No escribe nada. */
+  existePersona(nombre, operador) {
+    return Boolean(findBestMatch(this._candidatesAll(), nombre, operador).best);
+  }
+
   /**
    * Registra un voto para una persona que ya existe en el padrón.
    * Nunca agrega filas: si la persona o el candidato no existen, devuelve
@@ -224,6 +229,8 @@ class ExcelManager {
     };
 
     if (!yaConfirmado) {
+      // Marca supuesta (1 en la opción que había antes de confirmar) que se reemplaza al confirmar.
+      const supuestoPrevio = CANDIDATOS.find((n) => Number(row.getCell(c.candidatos[n]).value) === 1) || null;
       for (const n of CANDIDATOS) row.getCell(c.candidatos[n]).value = n === candidato ? 1 : null;
 
       row.getCell(c.CONFIRMADO).value = 'SI';
@@ -236,7 +243,7 @@ class ExcelManager {
       this.applyRowFill(target, best.rowNumber, GREEN_FILL);
       row.commit();
 
-      return { ...datos, status: 'REGISTRADO' };
+      return { ...datos, status: 'REGISTRADO', supuestoPrevio };
     }
 
     const operadorPrevio = row.getCell(c.OPERADOR_CONFIRMO).value || '';

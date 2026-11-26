@@ -190,6 +190,11 @@ class ExcelManager {
     return { status: 'ANOTADO_NO_ENCONTRADO', nombre, voto, operador, rowNumber: row.number };
   }
 
+  /** ¿Hay una persona con ese nombre en alguna hoja? No escribe nada. */
+  existePersona(nombre, operador) {
+    return Boolean(findBestMatch(this._candidatesAll(), nombre, operador).best);
+  }
+
   /**
    * Registra un voto para una persona que ya existe en el padrón.
    * Nunca agrega filas: si la persona o el candidato no existen, devuelve

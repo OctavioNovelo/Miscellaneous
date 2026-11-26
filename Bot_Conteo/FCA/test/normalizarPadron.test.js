@@ -62,7 +62,7 @@ test('parseGrado: un renglón "SALÓN X" nuevo no se toma como alumno', () => {
   assert.deepEqual(alumnos.map((a) => `${a.salon}:${a.nombre}:${a.voto}`), ['A:Ana:SI', 'G:Beto:NO']);
 });
 
-test('construirLibro: SI -> marca supuesta Voto Omar; NO -> NO voto por Omar; vacío o INSEGURO -> No ha votado; todo sin confirmar', () => {
+test('construirLibro: SI -> marca Voto Omar; NO, INSEGURO y vacío -> No ha votado; todo sin confirmar', () => {
   const alumnos = [
     { salon: '', nombre: 'Ana', operador: 'Op1', voto: 'SI' },
     { salon: '', nombre: 'Beto', operador: '', voto: 'NO' },
@@ -72,7 +72,7 @@ test('construirLibro: SI -> marca supuesta Voto Omar; NO -> NO voto por Omar; va
   const ws = construirLibro([['OTROS', alumnos]]).getWorksheet('OTROS');
   const celda = (fila, col) => ws.getRow(fila).getCell(HEADERS.indexOf(col) + 1).value;
   assert.equal(celda(2, 'Voto Omar'), 1);
-  assert.equal(celda(3, 'NO voto por Omar'), 1);
+  assert.equal(celda(3, 'No ha votado'), 1);
   for (const fila of [2, 3, 4, 5]) {
     assert.equal(celda(fila, 'Confirmado'), 'NO');
     assert.equal(celda(fila, 'Voto Confirmado'), null);

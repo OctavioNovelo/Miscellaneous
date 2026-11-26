@@ -2,76 +2,72 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>SISTEMA MAGI // CONTEO DE VOTOS</title>
+<title>Conteo FCA · Votos en vivo</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light">
+<meta name="color-scheme" content="dark">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header class="topbar">
-  <h1 class="sr-only">Sistema MAGI: conteo de votos en vivo</h1>
-  <div class="topbar-left">
-    <span class="dot"></span> SISTEMA MAGI <span class="sep">//</span> CONTEO ELECTORAL EN VIVO
-  </div>
+  <h1 class="brand"><span class="brand-mark" aria-hidden="true"></span>Conteo FCA <span class="brand-sub">Votos en vivo</span></h1>
   <div class="topbar-right">
     <span id="clock">00:00:00</span>
-    <span class="sep">|</span>
-    <span id="conn-status" class="status-badge status-off" role="status">SIN CONEXION</span>
+    <span id="conn-status" class="status-badge status-off" role="status">Sin conexión</span>
   </div>
 </header>
 
 <main class="grid">
 
-  <!-- Unidades MAGI (una por grado) -->
-  <section class="magi-row" id="magi-row">
+  <!-- Tarjetas por grado -->
+  <section class="grado-row" id="grado-row" aria-label="Participación por grado">
     <!-- generado por JS -->
   </section>
 
   <!-- Totales centrales -->
   <section class="panel totals-panel">
-    <h2>CONTEO GENERAL</h2>
+    <h2>Conteo general</h2>
     <div class="totals-grid" id="totals-grid"><!-- generado por JS --></div>
 
     <div class="summary-row">
-      <div>CONFIRMADOS<span id="sum-confirmados">0</span></div>
-      <div>PENDIENTES<span id="sum-pendientes">0</span></div>
-      <div>DISCREPANCIAS<span id="sum-discrepancias">0</span></div>
-      <div title="Confirmados cuyo voto no es una de las 3 opciones de voto">SIN CANDIDATO<span id="sum-otros">0</span></div>
+      <div>Confirmados<span id="sum-confirmados">0</span></div>
+      <div>Pendientes<span id="sum-pendientes">0</span></div>
+      <div id="sum-discrepancias-box">Discrepancias<span id="sum-discrepancias">0</span></div>
+      <div title="Confirmados cuyo voto no es una de las 3 opciones de voto">Sin candidato<span id="sum-otros">0</span></div>
     </div>
 
     <div class="turnout-row">
-      <div class="turnout-label">PARTICIPACIÓN <span id="turnout-fraction">0 / 0</span></div>
+      <div class="turnout-label">Participación <span id="turnout-fraction">0 / 0</span></div>
       <div class="turnout-bar"><div class="turnout-bar-fill" id="turnout-fill"></div></div>
       <div class="turnout-pct" id="turnout-pct">0%</div>
     </div>
   </section>
 
-  <!-- Gráfica dona overall -->
+  <!-- Gráfica dona global -->
   <section class="panel chart-panel">
-    <h2>DISTRIBUCIÓN DE VOTO</h2>
+    <h2>Distribución del voto</h2>
     <div class="doughnut-wrap">
-      <svg id="doughnut-svg" viewBox="0 0 200 200" role="img" aria-label="Distribución de votos confirmados por candidato"></svg>
+      <svg id="doughnut-svg" viewBox="0 0 200 200" role="img" aria-label="Distribución de votos marcados por opción"></svg>
       <div class="chart-legend" id="doughnut-legend"></div>
     </div>
   </section>
 
   <!-- Gráfica por grado -->
   <section class="panel chart-panel wide">
-    <h2>DESGLOSE POR GRADO</h2>
+    <h2>Desglose por grado</h2>
     <div class="chart-legend" id="bar-legend"></div>
     <div id="bar-chart-container"></div>
   </section>
 
   <!-- Alertas / discrepancias -->
   <section class="panel alert-panel">
-    <h2>ALERTAS <span id="alert-count" class="badge">0</span></h2>
+    <h2>Alertas <span id="alert-count" class="badge">0</span></h2>
     <div id="alert-list" class="scroll-list"></div>
   </section>
 
-  <!-- Ticker de actividad -->
+  <!-- Actividad reciente -->
   <section class="panel activity-panel">
-    <h2>REGISTRO DE ACTIVIDAD</h2>
+    <h2>Actividad reciente</h2>
     <div id="activity-list" class="scroll-list"></div>
   </section>
 

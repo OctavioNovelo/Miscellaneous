@@ -1,7 +1,7 @@
 {
-  "name": "magi-vote-dashboard",
+  "name": "conteo-fca-dashboard",
   "version": "1.0.0",
-  "description": "Dashboard local estilo MAGI (NERV/Evangelion) para visualizar en vivo el conteo de votos del Padron.xlsx",
+  "description": "Dashboard local Conteo FCA: conteo de votos en vivo desde el Padron.xlsx",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

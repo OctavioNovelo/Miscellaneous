@@ -15,8 +15,8 @@ const HEADERS = [
   'Confirmado', 'Voto Confirmado', 'Operador Confirmo', 'Fecha/Hora', 'Discrepancia',
 ];
 
-// Valor de la lista -> opción del padrón. Lo que no sea SI ni NO (vacío, INSEGURO) es "No ha votado".
-const OPCION_POR_VOTO = { SI: CANDIDATOS[0], NO: CANDIDATOS[1] };
+// Valor de la lista -> opción del padrón. Solo SI es Voto Omar; NO, INSEGURO y vacío son "No ha votado".
+const OPCION_POR_VOTO = { SI: CANDIDATOS[0] };
 const NO_HA_VOTADO = CANDIDATOS[2];
 
 // Archivo CSV -> nombre de hoja del padrón.
@@ -90,7 +90,7 @@ function parseGrado(text) {
 
 /**
  * Libro con una hoja por grado. El "Voto" de la lista se traduce a una de las 3 opciones:
- * SI -> Voto Omar, NO -> NO voto por Omar; lo demás (vacío, INSEGURO) -> No ha votado.
+ * SI -> Voto Omar; NO, INSEGURO y vacío -> No ha votado.
  * Todas las filas salen Confirmado = NO: la marca es supuesta y el bot la confirma al registrar el voto.
  */
 function construirLibro(grados) {

@@ -113,6 +113,15 @@ async function handleIncomingMessage(message) {
   const { nombre, voto, grado, seccion } = parsed.data;
   const operador = await resolveOperador(message);
 
+  // Sin VOTO, un nombre que no está en el padrón es charla del grupo: no se responde ni se anota.
+  if (parsed.sinPrefijo) {
+    const existe = await excelManager.runExclusive(async () => {
+      await excelManager.recargarSiCambio();
+      return excelManager.existePersona(nombre, operador);
+    });
+    if (!existe) return;
+  }
+
   let result;
   try {
     result = await excelManager.runExclusive(async () => {
@@ -161,7 +170,7 @@ async function procesarResultadoVoto(result) {
 
     case 'ANOTADO_NO_ENCONTRADO':
       await telegram.notifyNoEncontrado(result);
-      return `❌ ${result.nombre}: no está en el padrón. Quedó anotado en la hoja "No encontrados" para revisarlo.`;
+      return `❌ ${result.nombre}: no está en el padrón. Quedó anotado en la hoja "No encontrados", fila ${result.rowNumber}, para revisarlo.`;
 
     case 'CANDIDATO_NO_VALIDO':
       return `❌ "${result.voto}" no es una opción. Opciones: ${CANDIDATOS.join(', ')}.`;

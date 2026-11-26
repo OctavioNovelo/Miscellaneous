@@ -29,14 +29,9 @@ const HEADERS = {
 };
 
 const CANDIDATOS = ['Voto Omar', 'NO voto por Omar', 'No ha votado'];
+// Opción que cuenta a las personas sin confirmar (marca supuesta "No ha votado").
+const PENDIENTE = 'No ha votado';
 const CANDIDATO_POR_NORMA = new Map(CANDIDATOS.map((c) => [normalize(c), c]));
-
-const MAGI_NAMES = {
-  'PRIMER ANO': 'MELCHIOR-1',
-  'SEGUNDO ANO': 'BALTHASAR-2',
-  'TERCER ANO': 'CASPER-3',
-  'CUARTO ANO': 'MAGI-4',
-};
 
 const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
@@ -64,6 +59,8 @@ function colsOf(sheet) {
   for (const [key, names] of Object.entries(HEADERS)) {
     cols[key] = names.map((n) => byHeader.get(n)).find(Boolean) || null;
   }
+  // Columna de cada opción de voto: su marca (1) dice el voto vigente, confirmado o no.
+  cols.marcas = Object.fromEntries(CANDIDATOS.map((c) => [c, byHeader.get(normalize(c)) || null]));
   return cols;
 }
 
@@ -79,7 +76,7 @@ function statsFromWorkbook(wb) {
 
   // Revisar_Manual no es un grado: no cuenta en el padrón.
   // Solo los grados: 'No encontrados' y cualquier otra hoja auxiliar no cuentan en el padrón.
-  wb.worksheets.filter((s) => GRADO_SHEETS.includes(s.name)).forEach((sheet, idx) => {
+  wb.worksheets.filter((s) => GRADO_SHEETS.includes(s.name)).forEach((sheet) => {
     const cols = colsOf(sheet);
     const get = (row, key) => (cols[key] ? cellText(row.getCell(cols[key]).value) : '');
     const votos = votosEnCero();
@@ -97,10 +94,16 @@ function statsFromWorkbook(wb) {
 
       const discrepancia = get(row, 'DISCREPANCIA');
       if (discrepancia) discrepancias += 1;
-      if (normalize(get(row, 'CONFIRMADO')) !== 'SI') return;
+
+      // Sin confirmar: solo cuenta "No ha votado" (la marca supuesta de los demás no suma hasta confirmarse).
+      if (normalize(get(row, 'CONFIRMADO')) !== 'SI') {
+        const col = cols.marcas[PENDIENTE];
+        if (col && cellText(row.getCell(col).value) === '1') votos[PENDIENTE] += 1;
+        return;
+      }
 
       confirmados += 1;
-      // Solo cuentan las 3 opciones de voto; cualquier otro valor (p. ej. marcas viejas) va a "otros".
+      // Confirmadas: cuentan por su voto confirmado; un valor que no es una de las 3 opciones va a "otros".
       const candidato = CANDIDATO_POR_NORMA.get(normalize(get(row, 'VOTO_CONFIRMADO'))) || null;
       if (candidato) votos[candidato] += 1;
       else otros += 1;
@@ -124,7 +127,6 @@ function statsFromWorkbook(wb) {
 
     grados.push({
       hoja: sheet.name,
-      magi: MAGI_NAMES[normalize(sheet.name)] || `MAGI-${idx + 1}`,
       padron,
       confirmados,
       pendientes: padron - confirmados,
@@ -176,9 +178,9 @@ async function broadcastStats() {
   try {
     const stats = await readStats();
     io.emit('stats', stats);
-    console.log(`[MAGI] Estadisticas emitidas — confirmados: ${stats.totales.confirmados}/${stats.totales.padron}`);
+    console.log(`[Conteo] Estadisticas emitidas — confirmados: ${stats.totales.confirmados}/${stats.totales.padron}`);
   } catch (err) {
-    console.error('[MAGI] Error leyendo el Excel:', err.message);
+    console.error('[Conteo] Error leyendo el Excel:', err.message);
     io.emit('error', { message: err.message });
   } finally {
     broadcasting = false;
@@ -205,21 +207,21 @@ function start() {
     .on('all', (event, file) => {
       if (path.resolve(file) === EXCEL_PATH && (event === 'add' || event === 'change')) scheduleBroadcast();
     })
-    .on('error', (err) => console.error('[MAGI] Error observando el directorio:', err.message));
+    .on('error', (err) => console.error('[Conteo] Error observando el directorio:', err.message));
 
   // Respaldo: si por lo que sea el watcher no detecta el cambio, refrescamos
   // cada 10s de todas formas.
   setInterval(broadcastStats, 10000);
 
   io.on('connection', (socket) => {
-    console.log('[MAGI] Cliente conectado al dashboard');
+    console.log('[Conteo] Cliente conectado al dashboard');
     broadcastStats();
   });
 
   // Solo local: el padrón tiene nombres y operadores, no se expone a la red.
   server.listen(PORT, '127.0.0.1', () => {
-    console.log(`[MAGI] Sistema de conteo escuchando en http://127.0.0.1:${PORT}`);
-    console.log(`[MAGI] Observando: ${EXCEL_PATH}`);
+    console.log(`[Conteo] Dashboard escuchando en http://127.0.0.1:${PORT}`);
+    console.log(`[Conteo] Observando: ${EXCEL_PATH}`);
   });
 }
 

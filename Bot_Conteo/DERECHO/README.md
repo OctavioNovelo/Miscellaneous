@@ -19,11 +19,13 @@ Jade
 |---|---|
 | `VOTO` | Obligatorio. Marca el mensaje como voto. |
 | Nombre | Nombre completo tal como está en el padrón. Una persona por mensaje. Se busca en todos los grados y secciones. |
-| Por quién votas | `Castelan`, `German`, `Natalia`, `Gabriel`, `Jade` o `Aaron`. **Opcional**: si se omite, cuenta como Aaron. |
+| Por quién votas | `Castelan`, `German`, `Natalia`, `Gabriel`, `Jade`, `Aaron` o `No ha votado`. **Opcional**: si se omite, cuenta como Aaron. |
 
 Si el nombre no está en el padrón, o la opción no es válida, el bot responde con el motivo y no registra nada.
 
 Si el mensaje tiene solo `VOTO: Juan Perez`, el voto cuenta como Aaron.
+
+También basta con mandar solo el nombre, en una sola línea y sin `VOTO` (p. ej. `Pepe Botellas`): cuenta como Aaron si la persona está en el padrón. Si no está, el bot lo ignora en silencio, para no contestar la charla del grupo.
 
 ### Quién puede votar
 
@@ -124,12 +126,12 @@ Al arrancar, el bot copia el padrón a `data/Padron.backup-<fecha-hora>.xlsx`.
 `indeciso Aaron`). Tiene una hoja por grado: `Primer año`, `Segundo año`, `Tercer año`,
 `Cuarto año`. Las columnas se leen por **nombre de encabezado**, no por posición. Cada
 hoja debe tener `Salon` (o `Seccion`), `Nombre` y las columnas de candidatos `Castelan`,
-`German`, `Natalia`, `Gabriel`, `Jade` y `Aaron`; si falta alguna, el bot no arranca.
+`German`, `Natalia`, `Gabriel`, `Jade`, `Aaron` y `No ha votado`; si falta alguna, el bot no arranca.
 
 | Columna | Uso |
 |---|---|
 | `Salon` (sección), `Nombre`, `Número Tel.` | Datos de la persona |
-| `Castelan` … `Aaron` | Marca `1` en el candidato por el que votó |
+| `Castelan` … `No ha votado` | Marca `1` en la opción elegida (`No ha votado` para quien no ha votado) |
 | `Operador` | Operador asignado; para desempatar nombres parecidos |
 | `Confirmado` | `SI`/`NO`: fuente de verdad de si el voto ya se contó. Se agrega al cargar si no existe |
 | `Voto Confirmado` | Nombre del candidato votado |
@@ -137,7 +139,7 @@ hoja debe tener `Salon` (o `Seccion`), `Nombre` y las columnas de candidatos `Ca
 | `Fecha/Hora` | Cuándo se registró |
 | `Discrepancia` | Historial de discrepancias (no borra el voto) |
 
-Las marcas `Tomas`, `Alex` e `Indeciso` ya no cuentan como voto: el bot no las confirma al arrancar.
+Indeciso CE, Indeciso SA, Tomas y Alex ya no existen en el padrón: no son opciones de voto. Para regenerar o actualizar el padrón desde `Listas 23n`, usa `node src/sincronizarListas.js <padron.xlsx> <listas.xlsx> <salida.xlsx>`.
 
 ## 6. Dashboard MAGI
 

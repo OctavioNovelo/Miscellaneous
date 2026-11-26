@@ -113,6 +113,15 @@ async function handleIncomingMessage(message) {
   const { nombre, voto, grado, seccion } = parsed.data;
   const operador = await resolveOperador(message);
 
+  // Sin VOTO, un nombre que no está en el padrón es charla del grupo: no se responde ni se anota.
+  if (parsed.sinPrefijo) {
+    const existe = await excelManager.runExclusive(async () => {
+      await excelManager.recargarSiCambio();
+      return excelManager.existePersona(nombre, operador);
+    });
+    if (!existe) return;
+  }
+
   let result;
   try {
     result = await excelManager.runExclusive(async () => {
@@ -136,13 +145,20 @@ async function handleIncomingMessage(message) {
   await message.reply(await procesarResultadoVoto(result));
 }
 
+/** Qué pasó con la marca supuesta de la fila (la que estaba en el padrón antes de confirmar). */
+function describirSupuesto({ supuestoPrevio, voto }) {
+  if (supuestoPrevio === voto) return `Confirma el voto supuesto: ${voto}.`;
+  if (supuestoPrevio) return `Cambia el voto supuesto "${supuestoPrevio}" por "${voto}".`;
+  return 'Voto nuevo (no tenía voto supuesto).';
+}
+
 /** Avisa a Telegram cuando corresponde y devuelve el texto de respuesta para el grupo. */
 async function procesarResultadoVoto(result) {
   switch (result.status) {
     case 'REGISTRADO':
       // La ambigüedad se resuelve/avisa solo por Telegram.
       if (result.ambiguous) await telegram.notifyAmbiguo(result);
-      return `✅ Voto registrado.\n${result.nombreEnPadron} | ${result.grado} | Sección ${result.seccion} | Voto: ${result.voto}`;
+      return `✅ Voto registrado.\n${result.nombreEnPadron} | ${result.grado} | Sección ${result.seccion} | Voto: ${result.voto}\n${describirSupuesto(result)}`;
 
     case 'DUPLICADO_IGNORADO':
       await telegram.notifyDuplicado(result);
@@ -154,7 +170,7 @@ async function procesarResultadoVoto(result) {
 
     case 'ANOTADO_NO_ENCONTRADO':
       await telegram.notifyNoEncontrado(result);
-      return `❌ ${result.nombre}: no está en el padrón. Quedó anotado en la hoja "No encontrados" para revisarlo.`;
+      return `❌ ${result.nombre}: no está en el padrón. Quedó anotado en la hoja "No encontrados", fila ${result.rowNumber}, para revisarlo.`;
 
     case 'CANDIDATO_NO_VALIDO':
       return `❌ "${result.voto}" no es una opción. Opciones: ${CANDIDATOS.join(', ')}.`;

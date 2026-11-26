@@ -5,9 +5,9 @@ const assert = require('node:assert/strict');
 const { parseVoteMessage } = require('../src/messageParser');
 
 test('ignora mensajes que no empiezan con VOTO (chat normal del grupo)', () => {
-  assert.deepEqual(parseVoteMessage('hola a todos'), { ok: false, ignorar: true });
+  assert.deepEqual(parseVoteMessage('hola a todos\nnos vemos'), { ok: false, ignorar: true });
   assert.deepEqual(parseVoteMessage('Juan Perez\nJade'), { ok: false, ignorar: true });
-  assert.deepEqual(parseVoteMessage('VOTOS del sábado'), { ok: false, ignorar: true });
+  assert.deepEqual(parseVoteMessage('VOTOS del sábado\nsí'), { ok: false, ignorar: true });
 });
 
 test('nombre completo y por quién votas', () => {
@@ -41,4 +41,16 @@ test('sin grado ni salón el campo queda vacío', () => {
 test('más de dos líneas o sin nombre devuelven error', () => {
   assert.equal(parseVoteMessage('VOTO\nJuan\nJade\nSegundo').ok, false);
   assert.equal(parseVoteMessage('VOTO').ok, false);
+});
+
+test('sin VOTO, una sola línea es el nombre y cuenta como Aaron', () => {
+  assert.deepEqual(parseVoteMessage('Pepe Botellas'), {
+    ok: true, sinPrefijo: true, data: { nombre: 'Pepe Botellas', voto: 'Aaron', grado: null, seccion: null },
+  });
+});
+
+test('sin VOTO, varias líneas, texto vacío o respuestas del bot con emoji se ignoran', () => {
+  assert.deepEqual(parseVoteMessage('Pepe Botellas\nNo ha votado'), { ok: false, ignorar: true });
+  assert.deepEqual(parseVoteMessage('   '), { ok: false, ignorar: true });
+  assert.deepEqual(parseVoteMessage('⚠️ Pepe Botellas: ya estaba registrado con ese mismo voto.'), { ok: false, ignorar: true });
 });

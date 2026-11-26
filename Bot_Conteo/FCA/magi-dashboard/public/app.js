@@ -30,24 +30,24 @@ tickClock();
 // --- Conexión ---
 socket.on('connect', () => {
   const el = document.getElementById('conn-status');
-  el.textContent = 'ENLACE ACTIVO';
+  el.textContent = 'En vivo';
   el.classList.remove('status-off');
   el.classList.add('status-on');
 });
 socket.on('disconnect', () => {
   const el = document.getElementById('conn-status');
-  el.textContent = 'SIN CONEXION';
+  el.textContent = 'Sin conexión';
   el.classList.remove('status-on');
   el.classList.add('status-off');
 });
 
 socket.on('error', (payload) => {
-  console.error('Error del servidor MAGI:', payload.message);
+  console.error('Error del servidor:', payload.message);
 });
 
 socket.on('stats', (stats) => {
   CANDIDATOS = stats.candidatos || [];
-  safeRender('renderMagiUnits', () => renderMagiUnits(stats.grados));
+  safeRender('renderGradoCards', () => renderGradoCards(stats.grados));
   safeRender('renderTotals', () => renderTotals(stats.totales));
   safeRender('renderDoughnut', () => renderDoughnut(stats.totales));
   safeRender('renderBarChart', () => renderBarChart(stats.grados));
@@ -64,7 +64,7 @@ function safeRender(name, fn) {
   try {
     fn();
   } catch (err) {
-    console.error(`[MAGI] Error renderizando "${name}":`, err);
+    console.error(`[Conteo] Error renderizando "${name}":`, err);
   }
 }
 
@@ -89,23 +89,18 @@ function pct(n, total) {
   return `${((n / total) * 100).toFixed(1)}%`;
 }
 
-// --- Unidades MAGI (una por grado) ---
-function renderMagiUnits(grados) {
-  const row = document.getElementById('magi-row');
+// --- Tarjetas por grado ---
+function renderGradoCards(grados) {
+  const row = document.getElementById('grado-row');
   if (!row.dataset.built) {
     row.innerHTML = grados
       .map(
         (g, i) => `
-      <div class="magi-unit" id="magi-${i}">
-        <div class="magi-name">${esc(g.hoja)}</div>
-        <div class="magi-sub">${esc(g.magi)}</div>
-        <span class="magi-alert-tag" id="magi-${i}-alert" hidden></span>
-        <div class="magi-stats">
-          <div>CONF<span id="magi-${i}-conf">0</span></div>
-          <div>TOTAL<span id="magi-${i}-total">0</span></div>
-          <div>%<span id="magi-${i}-pct">0</span></div>
-        </div>
-        <div class="magi-bar" id="magi-${i}-bar"></div>
+      <div class="grado-card" id="grado-${i}">
+        <div class="grado-head"><span class="grado-name">${esc(g.hoja)}</span><span class="grado-alert-tag" id="grado-${i}-alert" hidden></span></div>
+        <div class="grado-pct"><span id="grado-${i}-pct">0</span><small>%</small></div>
+        <div class="grado-stats"><span id="grado-${i}-conf">0</span> de <span id="grado-${i}-total">0</span> confirmados</div>
+        <div class="grado-bar" id="grado-${i}-bar"></div>
       </div>`
       )
       .join('');
@@ -113,21 +108,21 @@ function renderMagiUnits(grados) {
   }
 
   grados.forEach((g, i) => {
-    const unit = document.getElementById(`magi-${i}`);
-    animateNumber(document.getElementById(`magi-${i}-conf`), g.confirmados);
-    animateNumber(document.getElementById(`magi-${i}-total`), g.padron);
-    document.getElementById(`magi-${i}-pct`).textContent = Math.round(g.turnout * 100);
+    const card = document.getElementById(`grado-${i}`);
+    animateNumber(document.getElementById(`grado-${i}-conf`), g.confirmados);
+    animateNumber(document.getElementById(`grado-${i}-total`), g.padron);
+    document.getElementById(`grado-${i}-pct`).textContent = Math.round(g.turnout * 100);
 
-    const bar = document.getElementById(`magi-${i}-bar`);
+    const bar = document.getElementById(`grado-${i}-bar`);
     const total = sumVotos(g.votos) || 1;
     bar.innerHTML = CANDIDATOS.map(
-      (c) => `<div class="magi-bar-seg" style="width:${(g.votos[c] / total) * 100}%;background:${colorOf(c)}"></div>`
+      (c) => `<div class="grado-bar-seg" style="width:${(g.votos[c] / total) * 100}%;background:${colorOf(c)}"></div>`
     ).join('');
 
-    unit.classList.toggle('has-alert', g.discrepancias > 0);
-    const tag = document.getElementById(`magi-${i}-alert`);
+    card.classList.toggle('has-alert', g.discrepancias > 0);
+    const tag = document.getElementById(`grado-${i}-alert`);
     tag.hidden = g.discrepancias === 0;
-    tag.textContent = `${g.discrepancias} DISC`;
+    tag.textContent = `${g.discrepancias} disc.`;
   });
 }
 
@@ -138,7 +133,7 @@ function renderTotals(totales) {
     grid.innerHTML = CANDIDATOS.map(
       (c, i) => `
       <div class="candidate-block" style="--swatch:${colorOf(c)}">
-        <div class="candidate-name">${esc(c.toUpperCase())}</div>
+        <div class="candidate-name">${esc(c)}</div>
         <div class="candidate-count" id="total-c${i}">0</div>
         <div class="candidate-pct" id="pct-c${i}">0%</div>
       </div>`
@@ -156,6 +151,7 @@ function renderTotals(totales) {
   animateNumber(document.getElementById('sum-pendientes'), totales.pendientes);
   animateNumber(document.getElementById('sum-discrepancias'), totales.discrepancias);
   animateNumber(document.getElementById('sum-otros'), totales.otros || 0);
+  document.getElementById('sum-discrepancias-box').classList.toggle('is-warn', totales.discrepancias > 0);
 
   document.getElementById('turnout-fraction').textContent = `${totales.confirmados} / ${totales.padron}`;
   const turnoutPct = totales.padron ? (totales.confirmados / totales.padron) * 100 : 0;
@@ -193,17 +189,17 @@ function renderDoughnut(totales) {
   segmentos.forEach((seg) => {
     const fraccion = total > 0 ? seg.valor / total : 0;
     const dash = fraccion * circumference;
-    circles += `<circle cx="100" cy="100" r="${radius}" fill="none" style="stroke:${seg.color}" stroke-width="26"
+    circles += `<circle cx="100" cy="100" r="${radius}" fill="none" style="stroke:${seg.color}" stroke-width="24"
       stroke-dasharray="${dash} ${circumference - dash}" stroke-dashoffset="${-offset}"
       transform="rotate(-90 100 100)" stroke-linecap="butt" />`;
     offset += dash;
   });
 
   svg.innerHTML = `
-    <circle cx="100" cy="100" r="${radius}" fill="none" style="stroke:var(--track)" stroke-width="26" />
+    <circle cx="100" cy="100" r="${radius}" fill="none" style="stroke:var(--track)" stroke-width="24" />
     ${circles}
-    <text x="100" y="96" text-anchor="middle" style="fill:var(--base-deep)" font-family="ui-monospace, monospace" font-size="30" font-weight="700">${total}</text>
-    <text x="100" y="118" text-anchor="middle" style="fill:var(--muted)" font-family="system-ui, sans-serif" font-size="11">VOTOS CONF.</text>
+    <text x="100" y="100" text-anchor="middle" style="fill:var(--text)" font-family="system-ui, sans-serif" font-size="34" font-weight="750">${total}</text>
+    <text x="100" y="118" text-anchor="middle" style="fill:var(--muted)" font-family="system-ui, sans-serif" font-size="12">votos marcados</text>
   `;
 }
 
@@ -225,7 +221,7 @@ function renderBarChart(grados) {
       return `
         <div class="grado-bar-row">
           <div class="grado-bar-toprow">
-            <span class="grado-bar-label">${esc(g.magi)} · ${esc(g.hoja)}</span>
+            <span class="grado-bar-label">${esc(g.hoja)}</span>
             <span class="grado-bar-total">${g.confirmados}/${g.padron} conf. · ${g.pendientes} pend. · ${g.discrepancias} disc. · ${Math.round(g.turnout * 100)}%</span>
           </div>
           <div class="grado-bar-track">
@@ -240,7 +236,9 @@ function renderBarChart(grados) {
 function renderAlerts(grados) {
   const list = document.getElementById('alert-list');
   const totalAlertas = grados.reduce((sum, g) => sum + g.discrepancias, 0);
-  document.getElementById('alert-count').textContent = totalAlertas;
+  const badge = document.getElementById('alert-count');
+  badge.textContent = totalAlertas;
+  badge.classList.toggle('has-alerts', totalAlertas > 0);
 
   if (totalAlertas === 0) {
     list.innerHTML = '<div class="empty-msg">Sin discrepancias registradas.</div>';
@@ -269,7 +267,7 @@ function renderActivity(actividad) {
       // Sin candidato válido se marca con texto, no solo con color.
       const hora = new Date(a.fecha).toLocaleTimeString('es-MX', { hour12: false });
       const flash = !isFirstRender && i === 0 && newestKey !== lastActivityKey ? 'new-flash' : '';
-      return `<div class="activity-item ${flash}"><span class="activity-time">${hora}</span> <strong>${esc(a.nombre)}</strong> — ${esc(a.hoja)} Sec.${esc(a.seccion)} → ${a.candidato ? `<span class="activity-voto">${esc(a.candidato)}</span>` : `<span class="activity-voto activity-sin-candidato">${esc(a.voto || '—')} (sin candidato)</span>`} (op. ${esc(a.operador) || '—'})</div>`;
+      return `<div class="activity-item ${flash}"><span class="activity-time">${hora}</span> <strong>${esc(a.nombre)}</strong> — ${esc(a.hoja)} Sec.${esc(a.seccion)} → ${a.candidato ? `<span class="activity-voto" style="--swatch:${colorOf(a.candidato)}">${esc(a.candidato)}</span>` : `<span class="activity-voto activity-sin-candidato">${esc(a.voto || '—')} (sin candidato)</span>`} <span class="activity-op">(op. ${esc(a.operador) || '—'})</span></div>`;
     })
     .join('');
 

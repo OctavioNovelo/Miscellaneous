@@ -1,6 +1,6 @@
-# Dashboard MAGI — Conteo de votos en vivo
+# Conteo DERECHO — Votos en vivo
 
-Panel local (no expuesto a internet) estilo terminal MAGI/NERV que lee tu
+Panel local (no expuesto a internet), en tema oscuro, que lee tu
 `Padron.xlsx` y se actualiza solo cada vez que el bot registra un voto.
 
 ## Instalación
@@ -26,7 +26,7 @@ Panel local (no expuesto a internet) estilo terminal MAGI/NERV que lee tu
 
    ```
    DASHBOARD_EXCEL_PATH=../bot/data/Padron.xlsx
-   DASHBOARD_PORT=4141
+   DASHBOARD_PORT=4142
    ```
 
    Ajusta la ruta según donde esté tu `data/Padron.xlsx` real. Si no pones
@@ -38,7 +38,7 @@ Panel local (no expuesto a internet) estilo terminal MAGI/NERV que lee tu
    npm start
    ```
 
-5. Abre en tu navegador: **http://localhost:4141**
+5. Abre en tu navegador: **http://localhost:4142**
 
 ## Cómo funciona
 
@@ -49,14 +49,15 @@ Panel local (no expuesto a internet) estilo terminal MAGI/NERV que lee tu
   10s por si acaso.
 - No escribe nada en el Excel — es de solo lectura, así que no hay riesgo de
   interferir con el bot ni con `runExclusive`.
-- Cuatro unidades "MAGI" (una por hoja/grado: MELCHIOR-1 Primer año,
-  BALTHASAR-2 Segundo, CASPER-3 Tercero, MAGI-4 Cuarto) muestran
+- Una tarjeta por hoja/grado (Primer año, Segundo año, Tercer año, Cuarto año; la hoja
+  "No encontrados" no cuenta como grado) muestra la
   participación y el desglose de voto de esa hoja.
 - Las columnas se ubican por encabezado (`Salon`, `Nombre`, `Confirmado`,
   `Voto Confirmado`, `Operador Confirmo`, `Fecha/Hora`, `Discrepancia`); si
   alguna falta, cuenta cero. Un voto cuenta cuando `Confirmado` = SI y
-  `Voto Confirmado` es uno de: Castelan, German, Natalia, Gabriel, Jade,
-  Aaron (sin importar acentos/mayúsculas). Cualquier otro valor confirmado
+  `Voto Confirmado` es una de: Castelan, German, Natalia, Gabriel, Jade,
+  Aaron, No ha votado (sin importar acentos/mayúsculas). Las filas sin
+  confirmar solo cuentan en "No ha votado", y solo si tienen esa marca. Cualquier otro valor confirmado
   aparece como "Sin candidato".
 - El panel central muestra el conteo global por candidato, %, confirmados,
   pendientes, discrepancias y una barra de participación general.
@@ -68,7 +69,6 @@ Panel local (no expuesto a internet) estilo terminal MAGI/NERV que lee tu
 
 - Es solo para verlo tú: no tiene autenticación ni HTTPS, no lo expongas
   fuera de tu máquina/red local.
-- Si cambias el nombre de las hojas o agregas grados (Cuarto/Quinto año), el
-  dashboard los detecta solo — recorre todas las hojas del libro, no hay
-  nombres de hoja quemados en el código, solo la etiqueta "MAGI-N" para las
-  que pasen de tres.
+- Si cambias el nombre de las hojas o agregas grados, el
+  dashboard los detecta solo entre los grados que define el bot
+  (`GRADO_SHEETS` en `src/excelManager.js`).

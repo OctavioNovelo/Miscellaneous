@@ -18,12 +18,14 @@ Jade
 | Línea | Qué es |
 |---|---|
 | `VOTO` | Obligatorio. Marca el mensaje como voto. |
-| Nombre | Nombre completo tal como está en el padrón. Una persona por mensaje. Se busca en todos los grados y secciones. |
+| Nombre | Nombre y apellido (al menos dos palabras), tal como está en el padrón. Una persona por mensaje. Se busca en todos los grados y secciones. |
 | Por quién votas | `Voto Omar`, `NO voto por Omar` o `No ha votado`. **Opcional**: si se omite, cuenta como Voto Omar. |
 
 Si el nombre no está en el padrón, o la opción no es válida, el bot responde con el motivo y no registra nada.
 
 Si el mensaje tiene solo `VOTO: Juan Perez`, el voto cuenta como Voto Omar.
+
+También basta con mandar solo el nombre, en una sola línea y sin `VOTO` (p. ej. `Pepe Botellas`): cuenta como Voto Omar si la persona está en el padrón. Si no está, el bot lo ignora en silencio, para no contestar la charla del grupo.
 
 ### Quién puede votar
 

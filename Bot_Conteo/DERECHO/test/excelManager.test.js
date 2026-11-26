@@ -146,3 +146,12 @@ test('Excel combinado: agrega columnas de confirmación al cargar', async () => 
   assert.notEqual(c.VOTO_CONFIRMADO, -1);
   assert.notEqual(c.DISCREPANCIA, -1);
 });
+
+test('existePersona: encuentra a una persona real y no a un nombre inventado, sin modificar el Excel', async () => {
+  const m = await cargarCopia();
+  const { nombre } = personaSinConfirmar(m, 'Segundo año');
+  const antes = m.workbook.getWorksheet('Segundo año').rowCount;
+  assert.equal(m.existePersona(nombre, 'Prueba'), true);
+  assert.equal(m.existePersona('Persona Inexistente Zzz', 'Prueba'), false);
+  assert.equal(m.workbook.getWorksheet('Segundo año').rowCount, antes);
+});

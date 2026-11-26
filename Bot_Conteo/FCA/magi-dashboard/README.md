@@ -1,6 +1,6 @@
-# Dashboard MAGI — Conteo de votos en vivo
+# Conteo FCA — Votos en vivo
 
-Panel local (no expuesto a internet) estilo terminal MAGI/NERV que lee tu
+Panel local (no expuesto a internet), en tema oscuro, que lee tu
 `Padron.xlsx` y se actualiza solo cada vez que el bot registra un voto.
 
 ## Instalación
@@ -49,8 +49,7 @@ Panel local (no expuesto a internet) estilo terminal MAGI/NERV que lee tu
   10s por si acaso.
 - No escribe nada en el Excel — es de solo lectura, así que no hay riesgo de
   interferir con el bot ni con `runExclusive`.
-- Cuatro unidades "MAGI" (una por hoja/grado: MELCHIOR-1 Primer año,
-  BALTHASAR-2 Segundo, CASPER-3 Tercero, MAGI-4 Cuarto) muestran
+- Una tarjeta por hoja/grado (Primer año … Noveno año, OTROS) muestra la
   participación y el desglose de voto de esa hoja.
 - Las columnas se ubican por encabezado (`Salon`, `Nombre`, `Confirmado`,
   `Voto Confirmado`, `Operador Confirmo`, `Fecha/Hora`, `Discrepancia`); si
@@ -69,6 +68,5 @@ Panel local (no expuesto a internet) estilo terminal MAGI/NERV que lee tu
 - Es solo para verlo tú: no tiene autenticación ni HTTPS, no lo expongas
   fuera de tu máquina/red local.
 - Si cambias el nombre de las hojas o agregas grados (Cuarto/Quinto año), el
-  dashboard los detecta solo — recorre todas las hojas del libro, no hay
-  nombres de hoja quemados en el código, solo la etiqueta "MAGI-N" para las
-  que pasen de tres.
+  dashboard los detecta solo entre los grados que define el bot
+  (`GRADO_SHEETS` en `src/excelManager.js`).

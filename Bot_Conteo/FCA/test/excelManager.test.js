@@ -197,3 +197,12 @@ test('hoja de grado sin una columna de candidato: falla con el mensaje de column
   await wb.xlsx.writeFile(archivo);
   await assert.rejects(new ExcelManager(archivo).load(), { message: 'La hoja "Octavo año" no tiene las columnas: No ha votado.' });
 });
+
+test('existePersona: encuentra a una persona real y no a un nombre inventado, sin modificar el Excel', async () => {
+  const m = await cargarCopia();
+  const { nombre } = personaSinConfirmar(m, 'Segundo año');
+  const antes = m.workbook.getWorksheet('Segundo año').rowCount;
+  assert.equal(m.existePersona(nombre, 'Prueba'), true);
+  assert.equal(m.existePersona('Persona Inexistente Zzz', 'Prueba'), false);
+  assert.equal(m.workbook.getWorksheet('Segundo año').rowCount, antes);
+});
