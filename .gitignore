@@ -1,8 +1,38 @@
+# Dependencias: cada dispositivo las instala (npm install / pip install)
+node_modules/
+
+# Secretos y sesiones locales (tokens, sesion de WhatsApp)
 .env
-.*
+.env.*
+!.env.example
+.wwebjs_auth/
+.wwebjs_cache/
 sesion/
+
+# Caches y temporales de herramientas
+.impeccable/
+.cache/
+.npm/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+__pycache__/
+*.pyc
+coverage/
+*.tmp
+*.log
+
 # Preguntas reales de alumnos: no se suben al repo.
 sin_respuesta.jsonl
 
-# Padrones (datos personales) y su carpeta data: cada dispositivo guarda el suyo.
-Bot_Conteo/*/data/
+# Datos de cada dispositivo dentro de Bot_Conteo: solo se versiona el padron.
+# Respaldos del bot, copias "antes de..." y demas archivos de data/ quedan fuera.
+Bot_Conteo/*/data/*
+!Bot_Conteo/*/data/Padron.xlsx
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
